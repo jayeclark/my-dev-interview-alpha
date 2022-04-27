@@ -16,6 +16,9 @@ import EyeFill from "../assets/eye-fill.svg"
 import EyeFillSlash from "../assets/eye-slash-fill.svg"
 import Close from "../assets/x-lg.svg"
 import mdi from "../assets/mdi.png"
+import profile from "../assets/profile_small.jpg"
+import practice from "../assets/camera-video-fill.svg"
+import review from "../assets/video.svg"
 
 function NavBar() {
   const theme = useTheme();
@@ -111,6 +114,10 @@ function NavBar() {
 
   }
 
+  const isActive = (path: string) => {
+    return Router.pathname === path;
+  }
+
   const authUser = async ({ email, password }: { email: string; password: string}) => {
     if (typeof window === "undefined") {
       return;
@@ -157,11 +164,23 @@ function NavBar() {
         <div className="brand">
           <Image height="41" width="64" alt="logo" src={mdi} />
         </div>
-        <div style={{ display: 'flex'}}>
-        <div style={{ marginRight: 16 }}><Link href="/">Practice</Link></div>
-          {user.jwt !== '' && (<div style={{ marginRight: 16 }}><Link href="/videos">My Videos</Link></div>)}
-          {user.jwt === '' && (<div className="sign-in" onClick={() => setShowSignIn(true)}>Sign In</div>)}
-          {user.jwt !== '' && (<div className="profile" onClick={logout}>{user.email?.replace(/@.+/,'')}</div>)}
+        <div style={{ display: 'flex', alignItems: "center"}}>
+          <div className="nav-item">
+            <Link href="/" passHref>
+              <Image width="20" height="20" style={{ color: isActive("/") ? "#000" : "#666"}} src={practice} alt="practice" />
+            </Link>
+          </div>
+          {user.jwt !== '' && (
+            <div className="nav-item">
+              <Link href="/videos" passHref>
+                <Image width="20" height="20" style={{ color: isActive("/videos") ? "#000" : "#666"}} src={review} alt="review" />
+              </Link>
+            </div>)}
+          {user.jwt === '' && (
+            <div className="nav-item sign-in" onClick={() => setShowSignIn(true)}>
+              Sign In
+            </div>)}
+          {user.jwt !== '' && (<div className="nav-item profile" onClick={logout}><Image alt="profile" width="32" height="32" style={{ border: "1px solid #dce6f1", borderRadius: 41}} src={profile}/></div>)}
         </div>
       </nav>
       <Dialog open={showSignIn}>
@@ -241,8 +260,13 @@ function NavBar() {
           font-weight: 600;
         }
         .sign-in {
-          text-decoration: underline;
           cursor: pointer;
+        }
+        .nav-item {
+          cursor: pointer;
+          font-weight: 500;
+          font-size: 0.9rem;
+          margin-left: 32px;
         }
       `}</style>
     </>

@@ -131,11 +131,11 @@ const Home: NextPage = () => {
           <RecordView key={question.id} questionId={question.id}/>
           <div className="buttons">
             <div>
-            <Button size="large" variant="text" onClick={handlePrevious}>&lt;&lt;&nbsp;Previous Question</Button>
+            {asked.length > 0 && <Button size="large" variant="text" onClick={handlePrevious}>&lt;&lt;&nbsp;Previous Question</Button>}
             
             </div>
             <div>
-            <Button size="large" variant="text" onClick={handleNext}>Next Question&nbsp;&gt;&gt;</Button>
+            <Button size="large" variant="text" onClick={handleNext}>Skip Question&nbsp;&gt;&gt;</Button>
             </div>
           </div>
         </section>

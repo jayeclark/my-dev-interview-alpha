@@ -1,8 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import AWS from "aws-sdk"
 import formidable from "formidable"
 import fs from 'fs'
+import { s3 } from "../../scripts/s3"
 
 export const config = {
   api: {
@@ -10,18 +10,10 @@ export const config = {
   }
 }
 
-const AWSConfig = {
-  accessKeyId: "AKIAX4F5XTNRJGOGN7UT",
-  secretAccessKey: "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",
-}
-AWS.config.update(AWSConfig);
-const s3 = new AWS.S3()
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
-
   let parsedFiles;
   const data: any = await new Promise((resolve, reject) => {
     const form = formidable({ multiples: true });

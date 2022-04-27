@@ -107,14 +107,14 @@ export default function Videos({ id }: { id: number}) {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Video Interview Practice</title>
+        <title>My Dev Interview - Video Interview Practice App</title>
         <meta name="description" content="Video interview simulator with some wildcards thrown in." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
         <section className="videos">
-          <h1>Watch Saved Videos</h1>
+          <h1>My Saved Videos</h1>
           {videos?.length > 0 ? renderQuestions() : "No videos available to display"}
         </section>
         <section className="viewer">
