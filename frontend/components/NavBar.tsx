@@ -157,6 +157,7 @@ function NavBar() {
       email: '',
       jwt: ''
     })
+    Router.push("/");
   }
   return (
     <>

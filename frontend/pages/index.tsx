@@ -118,7 +118,7 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Video Interview Practice</title>
+        <title>My Dev Interview</title>
         <meta name="description" content="Video interview simulator with some wildcards thrown in." />
         <link rel="icon" href="/favicon.ico" />
       </Head>

@@ -17,7 +17,7 @@ const Layout = (props: any) => {
   }
 
   const title =
-    "Video Interview Roulette - Video interview practice with a few wildcards for fun!";
+    "My Dev Interview - Video interview practice app";
 
   return (
     <>
