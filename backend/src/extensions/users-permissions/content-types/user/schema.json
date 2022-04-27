@@ -80,7 +80,7 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::answer.answer",
-      "mappedBy": "users_permissions_user"
+      "mappedBy": "user"
     }
   }
 }

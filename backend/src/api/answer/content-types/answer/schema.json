@@ -12,14 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "recording": {
-      "type": "media",
-      "multiple": false,
-      "required": true,
-      "allowedTypes": [
-        "videos"
-      ]
-    },
     "private_notes": {
       "type": "richtext"
     },
@@ -37,7 +29,7 @@
       "target": "api::question.question",
       "inversedBy": "answers"
     },
-    "users_permissions_user": {
+    "user": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
@@ -46,6 +38,15 @@
     "archive": {
       "type": "boolean",
       "default": false
+    },
+    "s3key": {
+      "type": "string"
+    },
+    "datetime": {
+      "type": "biginteger"
+    },
+    "user_id": {
+      "type": "biginteger"
     }
   }
 }
