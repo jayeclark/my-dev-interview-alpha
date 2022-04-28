@@ -64,7 +64,11 @@
         "Communication - Brevity",
         "Opinion",
         "Performance",
-        "Brainteaser"
+        "Brainteaser",
+        "Technical - JS",
+        "Technical - System Design",
+        "Technical - General CS",
+        "Technical - HTML/CSS"
       ]
     },
     "answers": {
@@ -72,6 +76,14 @@
       "relation": "oneToMany",
       "target": "api::answer.answer",
       "mappedBy": "question"
+    },
+    "sample_answer": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "richtext"
     }
   }
 }

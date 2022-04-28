@@ -29,6 +29,7 @@ query getVideos($id: Long) {
       id
       attributes {
         rating
+        title
         s3key
         datetime
         question {

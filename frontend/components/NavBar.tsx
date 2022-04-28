@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect, useRef, MutableRefObject } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import Router from "next/router"
+import { useRouter } from "next/router"
 import { useTheme } from "@mui/material"
 import Dialog from "@mui/material/Dialog"
 import Box from "@mui/material/Box"
@@ -22,6 +22,7 @@ import review from "../assets/video.svg"
 
 function NavBar() {
   const theme = useTheme();
+  const router = useRouter();
   const { handleSetUser, user } = useContext(UserContext);
   const [ showSignIn, setShowSignIn ] = useState(false);
   const [ signup, setSignup ] = useState(false);
@@ -64,7 +65,7 @@ function NavBar() {
             }
             if (oldHref.current.includes("google") == false) {
               closeGooglePopUp();
-              Router.push("/")
+              router.push("/")
             }
           })
         })
@@ -115,7 +116,7 @@ function NavBar() {
   }
 
   const isActive = (path: string) => {
-    return Router.pathname === path;
+    return router.pathname === path;
   }
 
   const authUser = async ({ email, password }: { email: string; password: string}) => {
@@ -157,7 +158,7 @@ function NavBar() {
       email: '',
       jwt: ''
     })
-    Router.push("/");
+    router.push("/");
   }
   return (
     <>
@@ -168,13 +169,17 @@ function NavBar() {
         <div style={{ display: 'flex', alignItems: "center"}}>
           <div className="nav-item">
             <Link href="/" passHref>
-              <Image width="20" height="20" style={{ color: isActive("/") ? "#000" : "#666"}} src={practice} alt="practice" />
+              <div>
+                <Image width="20" height="20" style={{ color: isActive("/") ? "#000" : "#666"}} src={practice} alt="practice" />
+              </div>
             </Link>
           </div>
           {user.jwt !== '' && (
             <div className="nav-item">
               <Link href="/videos" passHref>
-                <Image width="20" height="20" style={{ color: isActive("/videos") ? "#000" : "#666"}} src={review} alt="review" />
+                <div>
+                  <Image width="20" height="20" style={{ color: isActive("/videos") ? "#000" : "#666"}} src={review} alt="review" />
+                </div>
               </Link>
             </div>)}
           {user.jwt === '' && (
@@ -242,7 +247,7 @@ function NavBar() {
           width: 100vw;
           height: 57px;
           min-height: 45px;
-          max-height: 70px;
+          max-height: 57px;
           padding: 8px 16px;
           position: fixed;
           display: flex;

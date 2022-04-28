@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState, useContext } from "react";
 import axios from "axios";
-import { Button } from "@mui/material";
+import Image from "next/image";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { UserContext } from "../scripts/context";
+import { useTheme } from "@mui/material";
+import { Dialog, Button, Card, CardContent, TextField, Slider } from "@mui/material";
+import cloudCheck from "../assets/cloud-check.svg";
 
 const VideoPreview = ({ stream }: { stream: MediaStream | null }) => {
   const [loading, setLoading] = useState(true);
@@ -44,18 +47,22 @@ const VideoPreview = ({ stream }: { stream: MediaStream | null }) => {
           </>);
 };
 
-const RecordView = ({ questionId }: { questionId: number }) => {
+const RecordView = ({ questionId, handleNextQuestion }: { questionId: number, handleNextQuestion: any }) => {
   const { user } = useContext(UserContext);
+  const theme = useTheme();
   const [recording, setRecording] = useState(false);
   const [displayRecording, setDisplayRecording] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [hasRecorded, setHasRecorded] = useState(false);
-
+  const [showSave, setShowSave] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
 
   const { startRecording, stopRecording, mediaBlobUrl, previewStream } =
     useReactMediaRecorder({ video: true });
 
-  const handleSave = async () => {
+  const handleSave = async (e: any) => {
+    setSaving(true);
     const mediaBlob: Blob = await fetch(mediaBlobUrl as string).then (res => res.blob());
     const dateStamp: number = new Date(Date.now()).getTime();
     const fileName = user.id + "-" + dateStamp;
@@ -76,6 +83,8 @@ const RecordView = ({ questionId }: { questionId: number }) => {
           user_id: user.id,
           datetime: new Date(Date.now()).getTime(),
           question: questionId,
+          title: e.target.title.value,
+          rating: e.target.rating.value,
       }
     }
     const headers = {
@@ -84,6 +93,10 @@ const RecordView = ({ questionId }: { questionId: number }) => {
 
     axios.post('http://localhost:1337/api/answers', body, { headers }).then(res => {
       console.log(res);
+      setSaving(false);
+      setShowSave(false);
+      setHasSaved(true);
+      setPlaying(false);
     })
   }
 
@@ -136,13 +149,25 @@ const RecordView = ({ questionId }: { questionId: number }) => {
           <div className="overlay" style={{ visibility: !playing && !recording ? "visible" : "hidden",  backdropFilter:  !playing && !recording ? 'blur(20px)' : '' }}>
           { !recording && (
             <>
-            {hasRecorded && (
+            {hasRecorded && hasSaved && (<>
+                  <Card variant="outlined" style={{ width: 'calc(100% - 32px)', textAlign: 'center', padding: 24, marginBottom: 8, backgroundColor: "white", borderRadius: "6px", fontWeight: 500}}>
+                    <Image width={20} height={20} src={cloudCheck} alt="checkmark" style={{ transform: 'translateY(3px)'}} />&nbsp;&nbsp;Your video has been saved!
+                  </Card><div style={{width: '100%'}}></div>
+                  <Button sx={{...buttonStyle}} size="large" variant="contained" onClick={handleNextQuestion}><b>Next Question</b></Button>
+                  <div style={{width: '100%'}}></div>
+                </>)}
+            {hasRecorded && !hasSaved && (
               <>
                 <Button sx={{...buttonStyle}} size="large" variant="contained" onClick={handleWatch}><b>Watch your answer</b></Button>
                 <div style={{width: '100%'}}></div>
               </>
             )}
-              <Button sx={{...buttonStyle}} size="large" variant={hasRecorded ? "outlined" : "contained"} onClick={handleStart}><b>{hasRecorded ? "Try Again" : "Record an answer"}</b></Button>
+            {hasRecorded && (
+              <>
+                <Button sx={{...buttonStyle, opacity: 0.85, background: "#fff"}} size="large" variant="outlined" onClick={handleStart}><b>Try Again</b></Button>
+              </>
+            )}
+            {!hasRecorded && (<Button sx={{...buttonStyle}} size="large" variant="contained" onClick={handleStart}><b>Record an answer</b></Button>)}
             </>
             
           )}
@@ -159,13 +184,61 @@ const RecordView = ({ questionId }: { questionId: number }) => {
             <Button sx={{...buttonStyle, ...cornerStyleLower, opacity: 0.85, background: "#fff" }} size="large" variant="outlined" onClick={handleStart}><b>Try Again</b></Button>
           )}
           {playing && user.email && (
-            <Button sx={{...buttonStyle, ...cornerStyle }} size="large" variant="contained" onClick={handleSave}><b>Save Answer</b></Button>
+            <Button sx={{...buttonStyle, ...cornerStyle }} size="large" variant="contained" onClick={() => setShowSave(true)}><b>Save Answer</b></Button>
           )}
         </div>
-       
+        <Dialog open={showSave}>
+            <Card>
+              <CardContent>
+                <h1>Save This Recording</h1>
+                <span style={{ fontSize: '0.85rem' }}>
+                  Save this recording to review in the future, or include in a video resume.
+                </span>
+                <form onSubmit={(e) => {e.preventDefault(); handleSave(e)}}>
+                  <TextField 
+                    id="title" 
+                    name="title"
+                    label="(Optional) Add a brief descriptive title"
+                    style={{ width: "100%", marginTop: 32, marginBottom: 16 }}
+                  />
+                  <label htmlFor="rating">Rate your performance (0 - 5 stars)</label>
+                  <Slider 
+                    min={0}
+                    max={10}
+                    name="rating"
+                    defaultValue={6}
+                    step={1}
+                    valueLabelDisplay="off"
+                    style={{ marginBottom: 48 }}
+                    marks={[
+                      { value: 0, label: "0" },
+                      { value: 1, label: "" },
+                      { value: 2, label: "1" },
+                      { value: 3, label: "" },
+                      { value: 4, label: "2" },
+                      { value: 5, label: "" },
+                      { value: 6, label: "3" },
+                      { value: 7, label: "" },
+                      { value: 8, label: "4" },
+                      { value: 9, label: "" },
+                      { value: 10, label: "5" }
+                    ]}
+                  />
+                   <div style={{ textAlign: 'right' }}>
+                    <Button style={{ marginLeft: 'auto' }}  onClick={() => setShowSave(false)} disabled={saving}>Cancel</Button>
+                    <Button type="submit" variant="contained" disabled={saving}>{saving ? "Saving - Please Wait" : "Save Answer"}</Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+        </Dialog>
 
       </section>
       <style jsx>{`
+        h1 {
+          margin-bottom: 4px;
+          margin-top: 0px;
+        }
         .answer-container {
           position: relative;
         }

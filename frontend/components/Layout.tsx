@@ -61,7 +61,7 @@ const Layout = (props: any) => {
           </style>
           <NavBar />
         </header>
-        <div style={{ paddingTop: "70px" }}>{props.children}</div>
+        <div style={{ paddingTop: "57px" }}>{props.children}</div>
         </Box>
       </UserContext.Provider>
     </>

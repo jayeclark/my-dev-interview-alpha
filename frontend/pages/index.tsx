@@ -109,6 +109,12 @@ const Home: NextPage = () => {
     })
   }
 
+  const handleSkip = async () => {
+    getNextQuestion(count).then((res) => {
+      setQuestion(res);
+    })
+  }
+
   const handlePrevious = async () => {
     getPreviousQuestion(asked[asked.length - 1]).then((res) => {
       setQuestion(res);
@@ -128,14 +134,14 @@ const Home: NextPage = () => {
           <Card variant="outlined" sx={{ mb: theme.spacing(2), p: theme.spacing(3), display: 'flex', width: '100%', height: '10vw', minHeight: '100px', alignItems: 'center', justifyContent: 'center' }}>
             <div><b>{question.content}</b></div>
           </Card>
-          <RecordView key={question.id} questionId={question.id}/>
+          <RecordView handleNextQuestion={handleNext} key={question.id} questionId={question.id}/>
           <div className="buttons">
             <div>
             {asked.length > 0 && <Button size="large" variant="text" onClick={handlePrevious}>&lt;&lt;&nbsp;Previous Question</Button>}
             
             </div>
             <div>
-            <Button size="large" variant="text" onClick={handleNext}>Skip Question&nbsp;&gt;&gt;</Button>
+            <Button size="large" variant="text" onClick={handleSkip}>Skip Question&nbsp;&gt;&gt;</Button>
             </div>
           </div>
         </section>
