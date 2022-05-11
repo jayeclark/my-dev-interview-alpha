@@ -5,14 +5,14 @@ export const theme = createTheme({
     mode: "light",
     primary: {
       main: "#0a66c2",
-      contrastText: "white",
+      contrastText: "#fff",
     },
     common: {
       black: "#030027",
     },
     secondary: {
       main: "#19647e",
-      contrastText: "white",
+      contrastText: "#fff",
     },
     background: {
       paper: "#fff",

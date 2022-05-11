@@ -19,6 +19,7 @@ import mdi from "../assets/mdi.png"
 import profile from "../assets/profile_small.jpg"
 import practice from "../assets/camera-video-fill.svg"
 import review from "../assets/video.svg"
+import plan from "../assets/list-check.svg"
 
 function NavBar() {
   const theme = useTheme();
@@ -166,19 +167,30 @@ function NavBar() {
         <div className="brand">
           <Image height="41" width="64" alt="logo" src={mdi} />
         </div>
-        <div style={{ display: 'flex', alignItems: "center"}}>
+        <div style={{ display: 'flex', alignItems: "center" }}>
+        {user.jwt !== '' && (
+          <div className="nav-item">
+            <Link href="/plan" passHref>
+              <div style={{ display: "flex", alignItems: "center", color: isActive("/") ? "#000" : "#666"}}>
+                <Image width="24" height="24" style={{ color: isActive("/plan") ? "#000" : "#666"}} src={plan} alt="plan" />
+                <div style={{ marginLeft: 8 }}>Plan</div>
+              </div>
+            </Link>
+          </div>)}
           <div className="nav-item">
             <Link href="/" passHref>
-              <div>
-                <Image width="20" height="20" style={{ color: isActive("/") ? "#000" : "#666"}} src={practice} alt="practice" />
+              <div style={{ display: "flex", alignItems: "center", color: isActive("/") ? "#000" : "#666"}}>
+                <Image width="24" height="24" style={{ color: isActive("/") ? "#000" : "#666"}} src={practice} alt="practice" />
+                <div style={{ marginLeft: 8}}>Practice</div>
               </div>
             </Link>
           </div>
           {user.jwt !== '' && (
             <div className="nav-item">
-              <Link href="/videos" passHref>
-                <div>
-                  <Image width="20" height="20" style={{ color: isActive("/videos") ? "#000" : "#666"}} src={review} alt="review" />
+              <Link href="/review" passHref>
+                <div style={{ display: "flex", alignItems: "center", color: isActive("/") ? "#000" : "#666"}}>
+                  <Image width="18" height="18" style={{ color: isActive("/review") ? "#000" : "#666"}} src={review} alt="review" />
+                  <div style={{ marginLeft: 8}}>Review</div>
                 </div>
               </Link>
             </div>)}

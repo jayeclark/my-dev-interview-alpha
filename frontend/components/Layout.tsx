@@ -9,7 +9,7 @@ import NavBar from "./NavBar";
 const Layout = (props: any) => {
   const theme = useTheme();
 
-  const [ user, setuser ] = useState({ username: '', id: '', email: '', jwt: ''})
+  const [user, setuser] = useState({ username: '', id: '', email: '', jwt: '' })
 
   const handleSetUser = (user: any) => {
     localStorage.setItem("jwt", user.jwt);

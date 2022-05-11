@@ -3,7 +3,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { UserContext } from "../scripts/context";
-import { useTheme } from "@mui/material";
+import { FormGroup, FormControlLabel, Switch, useTheme } from "@mui/material";
 import { Dialog, Button, Card, CardContent, TextField, Slider } from "@mui/material";
 import cloudCheck from "../assets/cloud-check.svg";
 
@@ -29,7 +29,7 @@ const VideoPreview = ({ stream }: { stream: MediaStream | null }) => {
           <style jsx>{`
             .video-container {
               width: 100%;
-              height: calc(min(60vh, 60vw));
+              height: calc(min(54vh, 54vw));
               background-color: black!important;
               max-width: 100%;
               max-height: 100%;
@@ -47,7 +47,7 @@ const VideoPreview = ({ stream }: { stream: MediaStream | null }) => {
           </>);
 };
 
-const RecordView = ({ questionId, handleNextQuestion }: { questionId: number, handleNextQuestion: any }) => {
+const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: { questionId: number, handleNextQuestion?: any, title?: string, answerId?: any }) => {
   const { user } = useContext(UserContext);
   const theme = useTheme();
   const [recording, setRecording] = useState(false);
@@ -57,6 +57,7 @@ const RecordView = ({ questionId, handleNextQuestion }: { questionId: number, ha
   const [showSave, setShowSave] = useState(false);
   const [saving, setSaving] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
+  const [showPreview, setShowPreview] = useState(true);
 
   const { startRecording, stopRecording, mediaBlobUrl, previewStream } =
     useReactMediaRecorder({ video: true });
@@ -71,27 +72,43 @@ const RecordView = ({ questionId, handleNextQuestion }: { questionId: number, ha
     const formData = new FormData();
     formData.append("file", file);
 
-    const s3result: any = await fetch(`/api/sign-s3?id=${user.id}`, {
+    const s3result: any = await fetch(`/api/put-s3?id=${user.id}`, {
       method: "POST",
       body: formData
     })
     const bodyText = await s3result.json();
-    const body = {
+
+    const answerBody = {
+      data: {
+          users: user.id,
+          user_id: user.id,
+          question: questionId,
+          title: e.target.title.value,
+      }
+    }
+    const headers = {
+      Authorization: `Bearer ${user.jwt}`
+    }
+    let id = answerId;
+    if (!id) {
+      const res = await axios.post('http://localhost:1337/api/answers', answerBody, { headers });
+      const data = await res.data
+      const answer = await data.answer
+      id = await answer.id
+    }
+    const videoBody = {
       data: {
           s3key: bodyText.filename,
           users: user.id,
           user_id: user.id,
           datetime: new Date(Date.now()).getTime(),
           question: questionId,
-          title: e.target.title.value,
           rating: e.target.rating.value,
+          answer: id,        
       }
     }
-    const headers = {
-      Authorization: `Bearer ${user.jwt}`
-    }
 
-    axios.post('http://localhost:1337/api/answers', body, { headers }).then(res => {
+    axios.post('http://localhost:1337/api/videos', videoBody, { headers }).then(res => {
       console.log(res);
       setSaving(false);
       setShowSave(false);
@@ -135,25 +152,33 @@ const RecordView = ({ questionId, handleNextQuestion }: { questionId: number, ha
 
   const cornerStyleLower = {
     position: 'absolute!important',
-    top: '74.25px',
+    top: user.id ? '74.25px' : '16px',
     right: '16px',
   }
 
   const activeVideoPlayer = useRef(null);
 
+  const handleSwitch = () => {
+    setShowPreview(!showPreview);
+  }
+
   return (
     <>
       <section id="record-answer" className="answer-container">
         <div className="video-screen">
-          {recording ? <VideoPreview stream={previewStream} /> : <video ref={activeVideoPlayer} src={mediaBlobUrl || ''} controls autoPlay={playing ? true: false} />}
-          <div className="overlay" style={{ visibility: !playing && !recording ? "visible" : "hidden",  backdropFilter:  !playing && !recording ? 'blur(20px)' : '' }}>
+          {recording && showPreview && (<VideoPreview stream={previewStream} />)}
+          {recording && !showPreview && (<div style={{ backgroundColor: "#000", height: "calc(min(54vh, 54vw))", width: "calc(min(54vh, 54vw))", maxWidth: "calc(min(54vh, 54vw))", overflow: "hidden", margin: "0px auto" }} ><Image layout="responsive" width={400} height={400} style={{ maxWidth: "calc(min(60vh, 60vw))", maxHeight: "calc(min(60vh, 60vw))", overflow: "hidden" }} alt="fake person" src="https://fakeface.rest/face/view?minimum_age=24&maximum_age=50" /></div>)}
+          {!recording && (<video ref={activeVideoPlayer} src={mediaBlobUrl || ''} controls autoPlay={playing ? true : false} />)}
+          <div className="overlay" style={{ visibility: !playing && !recording ? "visible" : "hidden", backdropFilter: !playing && !recording ? 'blur(20px)' : '' }}>
           { !recording && (
             <>
             {hasRecorded && hasSaved && (<>
                   <Card variant="outlined" style={{ width: 'calc(100% - 32px)', textAlign: 'center', padding: 24, marginBottom: 8, backgroundColor: "white", borderRadius: "6px", fontWeight: 500}}>
                     <Image width={20} height={20} src={cloudCheck} alt="checkmark" style={{ transform: 'translateY(3px)'}} />&nbsp;&nbsp;Your video has been saved!
-                  </Card><div style={{width: '100%'}}></div>
-                  <Button sx={{...buttonStyle}} size="large" variant="contained" onClick={handleNextQuestion}><b>Next Question</b></Button>
+                  </Card><div style={{ width: '100%' }}></div>
+                  {handleNextQuestion && (
+                    <Button sx={{...buttonStyle}} size="large" variant="contained" onClick={handleNextQuestion}><b>Next Question</b></Button>
+                  )}
                   <div style={{width: '100%'}}></div>
                 </>)}
             {hasRecorded && !hasSaved && (
@@ -174,11 +199,16 @@ const RecordView = ({ questionId, handleNextQuestion }: { questionId: number, ha
           </div>
           {recording && displayRecording && (
             <>
-              <div className="stop-button" >
+              <div className={showPreview ? "stop-button" : "stop-button-no-preview"} >
                 <Button size="large" variant="contained" color="error" onClick={handleStop}><b>Stop Recording</b></Button>
               </div>
-              {displayRecording && <div className="recording-indicator"></div>}
+              {displayRecording && <div className={showPreview ? "recording-indicator" : "recording-indicator-no-preview"}></div>}
             </>
+          )}
+          {(!hasRecorded || recording) && (
+            <FormGroup>
+              <FormControlLabel control={<Switch checked={showPreview} onChange={handleSwitch} />} label="Enable Video Preview" />
+            </FormGroup>
           )}
           {playing && (
             <Button sx={{...buttonStyle, ...cornerStyleLower, opacity: 0.85, background: "#fff" }} size="large" variant="outlined" onClick={handleStart}><b>Try Again</b></Button>
@@ -194,13 +224,15 @@ const RecordView = ({ questionId, handleNextQuestion }: { questionId: number, ha
                 <span style={{ fontSize: '0.85rem' }}>
                   Save this recording to review in the future, or include in a video resume.
                 </span>
-                <form onSubmit={(e) => {e.preventDefault(); handleSave(e)}}>
-                  <TextField 
-                    id="title" 
-                    name="title"
-                    label="(Optional) Add a brief descriptive title"
-                    style={{ width: "100%", marginTop: 32, marginBottom: 16 }}
-                  />
+              <form onSubmit={(e) => { e.preventDefault(); handleSave(e) }}>
+                {!title && (
+                    <TextField 
+                      id="title" 
+                      name="title"
+                      label="(Optional) Add a brief descriptive title"
+                      style={{ width: "100%", marginTop: 32, marginBottom: 16 }}
+                    />
+                  )}
                   <label htmlFor="rating">Rate your performance (0 - 5 stars)</label>
                   <Slider 
                     min={0}
@@ -244,20 +276,20 @@ const RecordView = ({ questionId, handleNextQuestion }: { questionId: number, ha
         }
 
         .video-screen {
-          width: calc(min(80vh, 80vw));
-          height: calc(min(60vh, 60vw));
-          min-width: calc(min(80vh, 80vw));
-          min-height: calc(min(60vh, 60vw));
+          width: calc(min(72vh, 72vw));
+          height: calc(min(54vh, 54vw));
+          min-width: calc(min(72vh, 72vw));
+          min-height: calc(min(54vh, 54vw));
           max-width: 1600px;
           max-height: 1200px;
           position: relative;
         }
 
         video {
-          width: calc(min(80vh, 80vw));
-          height: calc(min(60vh, 60vw));
-          min-width: calc(min(80vh, 80vw));
-          min-height: calc(min(60vh, 60vw));
+          width: calc(min(72vh, 72vw));
+          height: calc(min(54vh, 54vw));
+          min-width: calc(min(72vh, 72vw));
+          min-height: calc(min(54vh, 54vw));
           border-radius: 6px;
         }
         
@@ -288,6 +320,12 @@ const RecordView = ({ questionId, handleNextQuestion }: { questionId: number, ha
           right: 16px;
         }
 
+        .stop-button-no-preview {
+          position: absolute!important;
+          top: 16px;
+          right: calc(16px + min(10vh, 10vw));
+        }
+
         .recording-indicator {
           position: absolute!important;
           top: 24px;
@@ -300,7 +338,20 @@ const RecordView = ({ questionId, handleNextQuestion }: { questionId: number, ha
           background-color: red;
         }
 
-        .recording-indicator::after {
+        .recording-indicator-no-preview {
+          position: absolute!important;
+          top: 24px;
+          left: calc(24px + min(10vh, 10vw));
+          border-radius: 12px;
+          height: 12px;
+          width: 12px;
+          outline: 2px solid white;
+          outline-offset: 2px;
+          background-color: red;
+        }
+
+        .recording-indicator::after,
+        .recording-indicator-no-preview::after {
           content: "Recording";
           color: white;
           font-weight: 600;
