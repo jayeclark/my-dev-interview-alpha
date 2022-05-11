@@ -62,13 +62,14 @@
         "Communication - Friendliness",
         "Communication - Respect",
         "Communication - Brevity",
-        "Opinion",
-        "Performance",
-        "Brainteaser",
+        "Opinion - Personal",
+        "Opinion - World Events",
+        "Opinion - Technical",
         "Technical - JS",
         "Technical - System Design",
         "Technical - General CS",
-        "Technical - HTML/CSS"
+        "Technical - HTML/CSS",
+        "Technical - Brainteaser"
       ]
     },
     "answers": {

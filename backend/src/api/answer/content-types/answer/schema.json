@@ -39,17 +39,26 @@
       "type": "boolean",
       "default": false
     },
-    "s3key": {
-      "type": "string"
-    },
-    "datetime": {
-      "type": "biginteger"
-    },
     "user_id": {
       "type": "biginteger"
     },
     "title": {
       "type": "string"
+    },
+    "planned_answer": {
+      "type": "richtext"
+    },
+    "prompts": {
+      "type": "richtext"
+    },
+    "datetime_planned": {
+      "type": "biginteger"
+    },
+    "videos": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::video.video",
+      "mappedBy": "answer"
     }
   }
 }

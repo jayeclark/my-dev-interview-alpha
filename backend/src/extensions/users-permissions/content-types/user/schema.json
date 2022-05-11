@@ -81,6 +81,12 @@
       "relation": "oneToMany",
       "target": "api::answer.answer",
       "mappedBy": "user"
+    },
+    "videos": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::video.video",
+      "mappedBy": "users_permissions_user"
     }
   }
 }

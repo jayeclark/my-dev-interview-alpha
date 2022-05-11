@@ -1,0 +1,47 @@
+{
+  "kind": "collectionType",
+  "collectionName": "videos",
+  "info": {
+    "singularName": "video",
+    "pluralName": "videos",
+    "displayName": "video",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "s3key": {
+      "type": "string"
+    },
+    "datetime": {
+      "type": "biginteger"
+    },
+    "answer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::answer.answer",
+      "inversedBy": "videos"
+    },
+    "archive": {
+      "type": "boolean",
+      "default": false
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "videos"
+    },
+    "user_id": {
+      "type": "biginteger"
+    },
+    "rating": {
+      "type": "integer",
+      "max": 10,
+      "min": 0,
+      "default": 5
+    }
+  }
+}
