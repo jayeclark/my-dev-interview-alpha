@@ -218,6 +218,10 @@ export default function Plans({ id }: { id: number}) {
         }
       }
     };
+    // Add in a check -- don't add the question to the catalg if already there
+    const newPlanCatalog = [...planCatalog, { qid: qid, question: question, plans: [] }]
+    console.log(newPlanCatalog);
+    setPlanCatalog(newPlanCatalog);
     setPlanMode("create");
     setCurrentPlan(newPlan);
     setEditTitle(true);
@@ -245,7 +249,7 @@ export default function Plans({ id }: { id: number}) {
           <span style={{marginLeft: 8}}>
             {p.attributes.title && (<>{p.attributes.title}<br/></>)}
             <span style={{ fontSize: 'small', opacity: 0.5 }}>Planned {formattedDate(p.attributes.datetime_planned)}
-              {p.attributes.videos.data.length > 0 && (
+              {p.attributes.videos?.data.length > 0 && (
                 <>
                   {" | "}
                   {p.attributes.videos.data.length} answer{p.attributes.videos.data.length == 1 ? "" : "s"}
@@ -417,7 +421,8 @@ export default function Plans({ id }: { id: number}) {
     }
   }
 
-  console.log(currentPlan);
+  console.log('curr', currentPlan);
+  console.log('mode', planMode);
 
   return (
     <div className={styles.container}>
@@ -508,15 +513,15 @@ export default function Plans({ id }: { id: number}) {
                 </h3>
                 <div style={{ marginBottom: 32 }}>
                   {editPlan === false && (
-                    <Markdown>{currentPlan.attributes.planned_answer}</Markdown>
+                    <Markdown>{currentPlan.attributes.planned_answer || ""}</Markdown>
                   )}
                 {editPlan && (
                   <form onSubmit={(e: any) => handleUpdate(e, { planned_answer: e.target.planned_answer.value })} style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end", width: "100%" }}>
                     <MdEditor
                       name="planned_answer"
-                      defaultValue={currentPlan.attributes.planned_answer}
+                      defaultValue={currentPlan.attributes.planned_answer || ""}
                       style={{ height: "auto", width: "100%" }}
-                      renderHTML={(text) => <ReactMarkdown>{text}</ReactMarkdown>}
+                      renderHTML={(text) => <ReactMarkdown>{text || ""}</ReactMarkdown>}
                     />
                     <Button sx={{ mt: 1 }} onClick={() => setEditPlan(false)} type="button" variant="outlined">Cancel</Button>
                     <Button sx={{ mt: 1, ml: 1 }} type="submit" variant="contained">Save</Button>
@@ -534,15 +539,15 @@ export default function Plans({ id }: { id: number}) {
             </h3>
             <div style={{ marginBottom: 32 }}>
               {editPrompts === false && (
-                <Markdown>{currentPlan.attributes.prompts}</Markdown>
+                <Markdown>{currentPlan.attributes.prompts || ""}</Markdown>
               )}
               {editPrompts && (
                 <form onSubmit={(e: any) => handleUpdate(e, { prompts: e.target.prompts.value })} style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end", width: "100%" }}>
                   <MdEditor
                     name="prompts"
-                    defaultValue={currentPlan.attributes.prompts}
+                    defaultValue={currentPlan.attributes.prompts || ""}
                     style={{ height: "auto", width: "100%" }}
-                    renderHTML={(text) => <ReactMarkdown>{text}</ReactMarkdown>}
+                    renderHTML={(text) => <ReactMarkdown>{text || ""}</ReactMarkdown>}
                   />
                   <Button sx={{ mt: 1 }} onClick={() => setEditPrompts(false)} type="button" variant="outlined">Cancel</Button>
                   <Button sx={{ mt: 1, ml: 1 }} type="submit" variant="contained">Save</Button>
