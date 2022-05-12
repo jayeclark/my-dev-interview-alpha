@@ -9,9 +9,11 @@ import Chip from '@mui/material/Chip'
 import { useTheme } from '@mui/material/'
 import styles from '../styles/Home.module.css'
 
+export const API_URL = process.env.API_URL || 'http://localhost:1337'
+  
 const Home: NextPage = () => {
   const theme = useTheme();
-  const API_URL = process.env.API_URL || 'http://localhost:1337'
+  console.log('url', API_URL);
   const askedArray: Array<number> = []
   const filterArray: Array<string> = []
   const [question, setQuestion] = useState({id: -1, content: '', category: ''});

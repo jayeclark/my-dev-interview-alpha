@@ -6,6 +6,7 @@ import { UserContext } from "../scripts/context";
 import { FormGroup, FormControlLabel, Switch, useTheme } from "@mui/material";
 import { Dialog, Button, Card, CardContent, TextField, Slider } from "@mui/material";
 import cloudCheck from "../assets/cloud-check.svg";
+import { API_URL } from "../pages";
 
 const VideoPreview = ({ stream }: { stream: MediaStream | null }) => {
   const [loading, setLoading] = useState(true);
@@ -91,7 +92,7 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
     }
     let id = answerId;
     if (!id) {
-      const res = await axios.post('http://localhost:1337/api/answers', answerBody, { headers });
+      const res = await axios.post(`${API_URL}/api/answers`, answerBody, { headers });
       const data = await res.data
       const answer = await data.answer
       id = await answer.id
@@ -108,7 +109,7 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
       }
     }
 
-    axios.post('http://localhost:1337/api/videos', videoBody, { headers }).then(res => {
+    axios.post(`${API_URL}/api/videos`, videoBody, { headers }).then(res => {
       console.log(res);
       setSaving(false);
       setShowSave(false);

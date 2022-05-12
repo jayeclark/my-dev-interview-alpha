@@ -13,6 +13,7 @@ import starEmpty from '../assets/star.svg'
 import starHalf from '../assets/star-half.svg'
 import starFull from '../assets/star-fill.svg'
 import styles from '../styles/Home.module.css'
+import { API_URL } from '.'
 
 export default function Videos({ id }: { id: number}) {
 
@@ -36,7 +37,7 @@ export default function Videos({ id }: { id: number}) {
         }
       }
     console.log(request);
-    const result = await fetch("http://localhost:1337/graphql", {
+    const result = await fetch(`${API_URL}/graphql`, {
       headers: {
         Authorization: `Bearer ${user.jwt}`,
         "Content-Type": "application/json"
@@ -124,7 +125,7 @@ export default function Videos({ id }: { id: number}) {
       Authorization: `Bearer ${user.jwt}`,
       'Content-Type': 'application/json'
     }
-    axios.put(`http://localhost:1337/api/videos/${currentModalID}`, body, {headers}).then(res => {
+    axios.put(`${API_URL}/api/videos/${currentModalID}`, body, {headers}).then(res => {
       const newVideos = videoCatalog.map((cat: {
         videos: Array<any>;
         qid: number; question: string
@@ -149,7 +150,7 @@ export default function Videos({ id }: { id: number}) {
     const headers = {
       Authorization: `Bearer ${user.jwt}`
     }
-    axios.delete(`http://localhost:1337/api/videos/${currentModalID}`, { headers }).then(async (res) => {
+    axios.delete(`${API_URL}/api/videos/${currentModalID}`, { headers }).then(async (res) => {
       console.log(res)
       const response = await fetch(`/api/delete-s3?key=${currentS3Key}`, {
         method: "POST",

@@ -20,6 +20,7 @@ import profile from "../assets/profile_small.jpg"
 import practice from "../assets/camera-video-fill.svg"
 import review from "../assets/video.svg"
 import plan from "../assets/list-check.svg"
+import { API_URL } from "../pages/index"
 
 function NavBar() {
   const theme = useTheme();
@@ -57,12 +58,16 @@ function NavBar() {
                                     width=500,
                                     height=800`);
     if (g_windowReference && document) {
+      console.log("opened");
+      console.log(g_windowReference);
       g_windowReference.onload = () => {
         const bodyList = document.querySelector('body');
         const observer = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
+            console.log('docloc', document.location.href);
             if (oldHref.current != document.location.href) {
               oldHref.current = document.location.href
+              console.log('oldh', oldHref.current);
             }
             if (oldHref.current.includes("google") == false) {
               closeGooglePopUp();
@@ -85,7 +90,7 @@ function NavBar() {
     if (typeof window === "undefined") {
       return;
     }
-    const url = "http://localhost:1337/api/auth/local/register"
+    const url = `${API_URL}/api/auth/local/register`
     const body = {
       username: email, 
       email: email,
@@ -124,7 +129,7 @@ function NavBar() {
     if (typeof window === "undefined") {
       return;
     }
-    const url = "http://localhost:1337/api/auth/local"
+    const url = `${API_URL}/api/auth/local`
     const body = {
       identifier: email, 
       password: password

@@ -19,6 +19,7 @@ import starEmpty from '../assets/star.svg'
 import starHalf from '../assets/star-half.svg'
 import starFull from '../assets/star-fill.svg'
 import styles from '../styles/Home.module.css'
+import { API_URL } from '.';
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false
@@ -58,7 +59,7 @@ export default function Plans({ id }: { id: number}) {
         }
       }
     console.log(request);
-    const result = await fetch("http://localhost:1337/graphql", {
+    const result = await fetch(`${API_URL}/graphql`, {
       headers: {
         Authorization: `Bearer ${user.jwt}`,
         "Content-Type": "application/json"
@@ -117,7 +118,7 @@ export default function Plans({ id }: { id: number}) {
       const body = {
         data: { ...payload}
       }
-      await axios.put(`http://localhost:1337/api/answers/${currentPlan.id}`, body, { headers }).then(() => {
+      await axios.put(`${API_URL}/api/answers/${currentPlan.id}`, body, { headers }).then(() => {
         const newPlan = { ...currentPlan };
         newPlan.attributes = { ...newPlan.attributes, ...payload };
 
@@ -155,7 +156,7 @@ export default function Plans({ id }: { id: number}) {
         }
       }
 
-      await axios.post(`http://localhost:1337/api/answers/`, body, { headers }).then((res) => {
+      await axios.post(`${API_URL}/api/answers/`, body, { headers }).then((res) => {
         console.log(res);
         const qid = currentPlan.attributes.question.data.id;
 
@@ -358,7 +359,7 @@ export default function Plans({ id }: { id: number}) {
       Authorization: `Bearer ${user.jwt}`,
       'Content-Type': 'application/json'
     }
-    axios.put(`http://localhost:1337/api/answers/${currentModalID}`, body, {headers}).then(res => {
+    axios.put(`${API_URL}/api/answers/${currentModalID}`, body, {headers}).then(res => {
       removeFromCatalog(currentModalID);
       console.log(res);
       setShowModal(false);
@@ -376,7 +377,7 @@ export default function Plans({ id }: { id: number}) {
     const headers = {
       Authorization: `Bearer ${user.jwt}`
     }
-    axios.delete(`http://localhost:1337/api/answers/${currentModalID}`, { headers }).then(async (res) => {
+    axios.delete(`${API_URL}/api/answers/${currentModalID}`, { headers }).then(async (res) => {
       console.log(res)
       removeFromCatalog(currentModalID);
       setShowModal(false);
@@ -396,7 +397,7 @@ export default function Plans({ id }: { id: number}) {
           }
         }
       console.log(request);
-      const result = await fetch("http://localhost:1337/graphql", {
+      const result = await fetch(`${API_URL}/graphql`, {
         headers: {
           Authorization: `Bearer ${user.jwt}`,
           "Content-Type": "application/json"
