@@ -36,6 +36,10 @@ export const theme = createTheme({
             padding: 16,
             '&:hover': {
               background: "rgba(34, 34, 34, 0.8)",
+            },
+            '&:disabled': {
+              opacity: 0.6,
+              color: "#fff",
            },
           }
         }

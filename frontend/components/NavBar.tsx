@@ -211,11 +211,11 @@ function NavBar() {
           <div style={{ paddingBottom: 16, cursor: 'pointer', textAlign: 'right', fontWeight: '600' }} onClick={() => setShowSignIn(false)}>
             <Image src={Close} alt="close sign in dialog" />
           </div>
-          <Button variant="google" size="large" style={{ marginBottom: 16, width: "100%"}} onClick={openGooglePopUp}>
+          <Button disabled variant="google" size="large" style={{ marginBottom: 16, width: "100%"}} onClick={openGooglePopUp}>
             <Image height="24" width="24" src={Google} alt="Google Logo"/>
             <span style={{ marginLeft: 8 }}>Sign in with Google</span>
           </Button>
-          <Button variant="github" size="large" style={{ marginBottom: 16, width: "100%"}}>
+          <Button disabled variant="github" size="large" style={{ marginBottom: 16, width: "100%"}}>
             <Image height="24" width="24" src={Github} alt="GitHub Logo" />
             <span style={{ marginLeft: 8 }}>Sign in with GitHub</span>
           </Button>
