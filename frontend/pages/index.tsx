@@ -12,7 +12,7 @@ import styles from '../styles/Home.module.css'
 let url = 'http://localhost:1337'
 if (typeof window !== "undefined") {
   if (window.location.href.includes("herokuapp")) {
-    url = "https://backend-sheltered-shelf-66946.herokuapp.com/";
+    url = "https://backend-sheltered-shelf-66946.herokuapp.com";
   }
 } 
 
