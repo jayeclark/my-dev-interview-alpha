@@ -9,8 +9,13 @@ import Chip from '@mui/material/Chip'
 import { useTheme } from '@mui/material/'
 import styles from '../styles/Home.module.css'
 
-export const API_URL = process.env.API_URL || 'http://localhost:1337'
-  
+let url = 'http://localhost:1337'
+if (window && window.location.href.includes("herokuapp")) {
+  url = "https://backend-sheltered-shelf-66946.herokuapp.com/";
+}
+
+export const API_URL = process.env.API_URL || url
+
 const Home: NextPage = () => {
   const theme = useTheme();
   console.log('url', API_URL);

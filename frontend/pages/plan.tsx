@@ -512,8 +512,8 @@ export default function Plans({ id }: { id: number}) {
                   )}
                 </h3>
                 <div style={{ marginBottom: 32 }}>
-                  {editPlan === false && (
-                    <Markdown>{currentPlan.attributes.planned_answer || ""}</Markdown>
+                  {editPlan === false && currentPlan.attributes.planned_answer && (
+                    <Markdown>{currentPlan.attributes.planned_answer}</Markdown>
                   )}
                 {editPlan && (
                   <form onSubmit={(e: any) => handleUpdate(e, { planned_answer: e.target.planned_answer.value })} style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end", width: "100%" }}>
@@ -538,8 +538,8 @@ export default function Plans({ id }: { id: number}) {
               )}
             </h3>
             <div style={{ marginBottom: 32 }}>
-              {editPrompts === false && (
-                <Markdown>{currentPlan.attributes.prompts || ""}</Markdown>
+              {editPrompts === false && currentPlan.attributes.prompts && (
+                <Markdown>{currentPlan.attributes.prompts}</Markdown>
               )}
               {editPrompts && (
                 <form onSubmit={(e: any) => handleUpdate(e, { prompts: e.target.prompts.value })} style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end", width: "100%" }}>
