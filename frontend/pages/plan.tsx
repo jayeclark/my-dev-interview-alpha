@@ -1,23 +1,19 @@
-import React, { FormEvent } from 'react'
-import { useState, useContext, useEffect, useRef } from 'react'
+import React from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { useRouter } from 'next/router';
 import dynamic from "next/dynamic";
 import ReactMarkdown from "react-markdown";
 import "react-markdown-editor-lite/lib/index.css";
 import Head from 'next/head'
-import Video from '../assets/video.svg'
-import Router from 'next/router'
-import Image from 'next/image'
 import axios from 'axios'
 import RecordView from '../components/RecordView'
-import { Card, TextField, Button, Dialog, ToggleButton } from '@mui/material'
+import { Card, TextField, Button } from '@mui/material'
 import { useTheme } from "@mui/material"
 import Markdown from 'markdown-to-jsx';
 import { getPlans, getQuestions } from '../scripts/queries'
+import QuestionList from "../components/QuestionList"
 import { UserContext } from '../scripts/context'
-import starEmpty from '../assets/star.svg'
-import starHalf from '../assets/star-half.svg'
-import starFull from '../assets/star-fill.svg'
+import { redirectIfUnauthed } from '../scripts/auth'
 import styles from '../styles/Home.module.css'
 import { API_URL } from '.';
 
@@ -32,17 +28,14 @@ export default function Plans({ id }: { id: number}) {
   const theme = useTheme();
 
   interface Plan {
-    id: number;
+    id: string;
     attributes?: any
   }
-  const plan: Plan = { id: 0 }
-  const catalog: Array<any> = [];
-  const [planCatalog, setPlanCatalog] = useState(catalog);
+  const plan: Plan = { id: '0' }
+  const initCatalog: Array<any> = [];
+  const [catalog, setCatalog] = useState(initCatalog);
+  const [activeRecords, setActiveRecords] = useState(['']);
   const [currentPlan, setCurrentPlan] = useState(plan);
-  const [currentModalID, setCurrentModalID] = useState(-1);
-  const [showModal, setShowModal] = useState(false);
-  const [modalMode, setModalMode] = useState('delete')
-  const [filterBy, setFilterBy] = useState('');
   const [editTitle, setEditTitle] = useState(false);
   const [editPlan, setEditPlan] = useState(false);
   const [editPrompts, setEditPrompts] = useState(false);
@@ -50,6 +43,33 @@ export default function Plans({ id }: { id: number}) {
   const [searchFor, setSearchFor] = useState("");
   const [searched, setSearched] = useState(false);
   const [searchResults, setSearchResults] = useState(catalog);
+
+  const handleSetCatalog = (newCatalog: Array<any>) => {
+    setCatalog(newCatalog);
+  }
+
+  const handleSetActiveRecords = (id: string) => {
+    setActiveRecords([id]);
+    const records = catalog.find((q: any) => q.records.some((x: any) => x.id == id)).records
+    const plan = records.find((x: any) => x.id == id)
+    setCurrentPlan(plan);
+  }
+
+  const handleSetEditTitle = (bool: boolean) => {
+    setEditTitle(bool)
+  }
+
+  const handleSetEditPlan = (bool: boolean) => {
+    setEditPlan(bool)
+  }
+
+  const handleSetEditPrompts = (bool: boolean) => {
+    setEditPrompts(bool);
+  }
+
+  const handleSetPlanMode = (str: string) => {
+    setPlanMode(str);
+  }
 
   const handleGetPlans = async (userId: string) => {
     const request = {
@@ -74,39 +94,30 @@ export default function Plans({ id }: { id: number}) {
   }
 
   useEffect(() => {
-    if (user.jwt === '') {
-      Router.push("/");
-    }
-  
-    handleGetPlans(user.id).then((res) => {
-      const sorted = res.sort((a: any, b: any) => a.attributes.question.data.attributes.category - b.attributes.question.data.attributes.category);
-      console.log(sorted);
-      const reduced = sorted.reduce((coll: any, item: any) => {
-        const index = coll.findIndex((x: any) => x.qid == item.attributes.question.data.id);
-        console.log(index);
-        if (index >= 0 && item.attributes.datetime_planned > 0) {
-          coll[index].plans.push(item)
-        } else if (item.attributes.datetime_planned > 0) {
-          coll.push({
-            qid: item.attributes.question.data.id,
-            question: item.attributes.question.data.attributes.question,
-            plans: [item]
-          }) 
-        }
-        return coll;
-      }, [])
-      setPlanCatalog(reduced);
-    })
-  }, [])
+    redirectIfUnauthed(user.jwt, router);
 
-  const formattedDate = (timestamp: number) => {
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    const mm = new Date(timestamp).getMonth();
-    const dd = new Date(timestamp).getDate();
-    const yyyy = new Date(timestamp).getFullYear();
-    const currentYear = new Date(Date.now()).getFullYear();
-    return currentYear == yyyy ? `${months[mm]} ${dd}` : `${months[mm]} ${dd}, ${yyyy}`
-  }
+    if (user.jwt) {
+      handleGetPlans(user.id).then((res) => {
+        const sorted = res.sort((a: any, b: any) => a.attributes.question.data.attributes.category - b.attributes.question.data.attributes.category);
+        console.log(sorted);
+        const reduced = sorted.reduce((coll: any, item: any) => {
+          const index = coll.findIndex((x: any) => x.qid == item.attributes.question.data.id);
+          console.log(index);
+          if (index >= 0 && item.attributes.datetime_planned > 0) {
+            coll[index].records.push(item)
+          } else if (item.attributes.datetime_planned > 0) {
+            coll.push({
+              qid: item.attributes.question.data.id,
+              question: item.attributes.question.data.attributes.question,
+              records: [item]
+            }) 
+          }
+          return coll;
+        }, [])
+        setCatalog(reduced);
+      })
+    }
+  }, [])
 
   const handleUpdate = async (e: any, payload: object) => {
     e.preventDefault();
@@ -122,14 +133,14 @@ export default function Plans({ id }: { id: number}) {
         const newPlan = { ...currentPlan };
         newPlan.attributes = { ...newPlan.attributes, ...payload };
 
-        const qIndex = planCatalog.findIndex((q: any) => q.plans.some((x: any) => x.id == currentPlan.id))
-        const newQ = { ...planCatalog[qIndex] };
-        const pIndex = newQ.plans.findIndex((p: any) => p.id == currentPlan.id)
-        const newPlans = [...newQ.plans];
+        const qIndex = catalog.findIndex((q: any) => q.records.some((x: any) => x.id == currentPlan.id))
+        const newQ = { ...catalog[qIndex] };
+        const pIndex = newQ.records.findIndex((p: any) => p.id == currentPlan.id)
+        const newPlans = [...newQ.records];
         newPlans[pIndex] = newPlan;
-        newQ.plans = newPlans;
+        newQ.records = newPlans;
         console.log(newPlan);
-        const newCatalog = [ ...planCatalog ];
+        const newCatalog = [ ...catalog ];
         newCatalog[qIndex] = newQ;
         console.log(newCatalog[qIndex]);
         const key = Object.keys(payload)[0]
@@ -143,7 +154,7 @@ export default function Plans({ id }: { id: number}) {
           setEditPrompts(false);
         }
         setCurrentPlan(newPlan);
-        setPlanCatalog(newCatalog);
+        setCatalog(newCatalog);
       })
     } else {
       const body = {
@@ -160,8 +171,8 @@ export default function Plans({ id }: { id: number}) {
         console.log(res);
         const qid = currentPlan.attributes.question.data.id;
 
-        const qIndex = planCatalog.findIndex((q: any) => q.qid === qid);
-        const newQ = { ...planCatalog[qIndex] };
+        const qIndex = catalog.findIndex((q: any) => q.qid === qid);
+        const newQ = { ...catalog[qIndex] };
         const plan = {
           id: res.data.data.id,
           attributes: {
@@ -176,9 +187,10 @@ export default function Plans({ id }: { id: number}) {
             }
           }
         };
-        newQ.plans.push(plan);
+        newQ.records = newQ.records.filter((x: any) => x.id !== '0')
+        newQ.records.push(plan);
         console.log('plan', plan);
-        const newCatalog = [ ...planCatalog ];
+        const newCatalog = [ ...catalog ];
         newCatalog[qIndex] = newQ;
         console.log(newCatalog[qIndex]);
         const key = Object.keys(payload)[0]
@@ -191,10 +203,9 @@ export default function Plans({ id }: { id: number}) {
         if (key === "prompts") {
           setEditPrompts(false);
         }
-
-        
+        setActiveRecords([plan.id.toString()])
         setCurrentPlan(plan);
-        setPlanCatalog(newCatalog);
+        setCatalog(newCatalog);
         setPlanMode("edit");
       })
     }
@@ -203,7 +214,7 @@ export default function Plans({ id }: { id: number}) {
 
   const createNewAnswer = (qid: number, question: string) => {
     const newPlan = {
-      id: 0,
+      id: '0',
       attributes: {
         title: "",
         planned_answer: "",
@@ -218,101 +229,15 @@ export default function Plans({ id }: { id: number}) {
         }
       }
     };
-    // Add in a check -- don't add the question to the catalg if already there
-    const newPlanCatalog = [...planCatalog, { qid: qid, question: question, plans: [] }]
+    // Add in a check -- don't add the question to the catalog if already there
+    const newPlanCatalog = [...catalog, { qid: qid, question: question, plans: [] }]
     console.log(newPlanCatalog);
-    setPlanCatalog(newPlanCatalog);
+    setCatalog(newPlanCatalog);
     setPlanMode("create");
     setCurrentPlan(newPlan);
     setEditTitle(true);
     setEditPlan(true);
     setEditPrompts(true);
-  }
-
-  const renderAnswerPlans = (arr: Array<any>) => {
-    return (
-    <>
-      {arr.filter((p: any) => !p.attributes.title || p.attributes.title?.includes(filterBy) || p.attributes.question.data.attributes.question.includes(filterBy)).map((p: any) => (
-        <div 
-          key={p.id} 
-          style={{ backgroundColor: currentPlan.id === p.id ? "rgba(0,255,0,0.2)" : "", cursor: 'pointer', padding: "8px", display: 'flex', alignItems: 'center' }} 
-          onClick={() => {
-            setEditTitle(false);
-            setEditPlan(false);
-            setEditPrompts(false);
-            setCurrentPlan(p)
-          }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill={theme.palette.primary.main} viewBox="0 0 16 16">
-            <path fillRule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
-          </svg>
-          <span style={{marginLeft: 8}}>
-            {p.attributes.title && (<>{p.attributes.title}<br/></>)}
-            <span style={{ fontSize: 'small', opacity: 0.5 }}>Planned {formattedDate(p.attributes.datetime_planned)}
-              {p.attributes.videos?.data.length > 0 && (
-                <>
-                  {" | "}
-                  {p.attributes.videos.data.length} answer{p.attributes.videos.data.length == 1 ? "" : "s"}
-                </>
-              )}
-              </span>
-          </span>
-          <span style={{ marginLeft: 8, flexShrink: 0, flexGrow: 1, textAlign: "right", cursor: "pointer" }}>
-            <abbr title="Record an answer">
-              <svg style={{ margin: 4 }} onClick={(e) => {
-                e.stopPropagation();
-                console.log('clicked');
-                setEditTitle(false);
-                setEditPlan(false);
-                setEditPrompts(false);
-                setCurrentPlan(p);
-                setPlanMode('record');
-              }} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#666" viewBox="0 0 16 16">
-                  <path fillRule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z"/>
-              </svg>
-            </abbr>
-            <abbr title="Archive Plan">
-              <svg  style={{ margin: 4 }} onClick={(e) => { e.stopPropagation(); setModalMode("archive"); setCurrentModalID(p.id); setShowModal(true) }} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#666" viewBox="0 0 16 16">
-                <path d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15h9.286zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zM.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8H.8z"/>
-              </svg>
-            </abbr>
-            <abbr title="">
-              <svg style={{ margin: 4, marginRight: 0 }}  onClick={(e) => { e.stopPropagation(); setModalMode("delete"); setCurrentModalID(p.id);  setShowModal(true) }}xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#666" viewBox="0 0 16 16">
-                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
-              </svg>
-            </abbr>
-          </span>
-        </div>
-      ))}
-    </>)
-  }
-
-  const renderQuestions = () => {
-    return (
-      <>
-      {planCatalog.filter((q: any) => {
-        console.log(q);
-        console.log(filterBy);
-        console.log(q.question);
-        const question = q.question as string; 
-        const plans = q.plans;
-        return (question && question.match(filterBy)) || plans.some((v: any) => v.attributes.title?.match(filterBy))
-      })
-        .map((q: any) => (
-        <Card sx={{ p: 1, mb: 2 }} key={q.qid}>
-            <div style={{ padding: "8px", display: "flex", flexWrap: "nowrap", alignItems: "center" }}><div><b>{q.question}</b>&nbsp;&nbsp;&nbsp;</div>
-              <abbr style={{ marginTop: 4, cursor: "pointer" }} title="Add New Answer" onClick={() => createNewAnswer(q.qid, q.question)}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                </svg>
-              </abbr>
-            </div>
-          {renderAnswerPlans(q.plans)}
-        </Card>
-      ))}
-      </>
-    )
   }
 
   const renderResults = () => {
@@ -337,58 +262,6 @@ export default function Plans({ id }: { id: number}) {
     )
   }
   
-  const removeFromCatalog = (id: number) => {
-    const newCatalog = planCatalog
-      .map((cat: {
-          plans: Array<any>;
-          qid: number; question: string
-        }) => {
-          cat.plans = cat.plans.filter(x => x.id !== id)
-          return cat;
-      })
-      .filter((c) => c.plans.length > 0);
-    setPlanCatalog(newCatalog); 
-    if (currentPlan.id == id) {
-      setCurrentPlan({ id: 0, attributes: {} })
-    }
-  }
-  
-  const handleArchive = () => {
-    const body = {
-      data: {
-          archive: true
-      }
-    }
-    const headers = {
-      Authorization: `Bearer ${user.jwt}`,
-      'Content-Type': 'application/json'
-    }
-    axios.put(`${API_URL}/api/answers/${currentModalID}`, body, {headers}).then(res => {
-      removeFromCatalog(currentModalID);
-      console.log(res);
-      setShowModal(false);
-      setCurrentModalID(-1);
-    })
-  }
-
-  const handleDelete = async () => {
-    const body = {
-      id: currentModalID,
-      data: {
-          archive: true
-      }
-    }
-    const headers = {
-      Authorization: `Bearer ${user.jwt}`
-    }
-    axios.delete(`${API_URL}/api/answers/${currentModalID}`, { headers }).then(async (res) => {
-      console.log(res)
-      removeFromCatalog(currentModalID);
-      setShowModal(false);
-      setCurrentModalID(-1);
-    })
-  }
-
   const handleSearch = async (e: any) => {
     console.log("searchcaled")
     e.preventDefault();
@@ -452,25 +325,31 @@ export default function Plans({ id }: { id: number}) {
               <Button sx={{ mb: 2 }}type="submit" variant="contained">Search</Button>
             </div>
           </form>
-
             {searchResults?.length > 0 ? renderResults() : searched === false ? "" : "No questions match that search." }
           <h1>My Planned Answers</h1>
-          <TextField 
-            onChange={(e) => setFilterBy(e.target.value)} 
-            id="filter" 
-            name="filter"
-            label="Filter by question"
-            style={{ backgroundColor: theme.palette.background.paper,  width: "100%", marginBottom: 16 }}
-          />
-          {planCatalog?.length > 0 ? renderQuestions() : "No plans available to display"}
+          {catalog?.length > 0 ? (
+            <QuestionList
+              catalog={catalog}
+              style="plans"
+              activeRecords={activeRecords}
+              setActiveRecords={handleSetActiveRecords}
+              setCatalog={handleSetCatalog}
+              planHandlers={{
+                setEditTitle: handleSetEditTitle,
+                setEditPlan: handleSetEditPlan,
+                setEditPrompts: handleSetEditPrompts,
+                setPlanMode: handleSetPlanMode
+              }}
+            />
+          ) : "No plans available to display"}
         </section>
         <section className="viewer">
           <h1>&nbsp;</h1>
-          {(currentPlan.id > 0 || planMode == "create") && (<>
+          {(+currentPlan.id > 0 || planMode == "create") && (<>
             <Card variant="outlined" sx={{ mb: theme.spacing(2), p: theme.spacing(2), display: 'flex', width: '100%', height: '10vh', minHeight: '80px', alignItems: 'center', justifyContent: 'center' }}>
               <div><b>{currentPlan.attributes.question.data.attributes.question}</b></div>
             </Card>
-                      {currentPlan.id > 0 && planMode == "record" && (
+                      {+currentPlan.id > 0 && planMode == "record" && (
             <>
               <RecordView
                 questionId={currentPlan.attributes.question.data.id}
@@ -556,18 +435,6 @@ export default function Plans({ id }: { id: number}) {
             </div>
           </>)}
         </section>
-        <Dialog open={showModal}>
-          <Card sx={{ p: 4 }}>
-            <div style={{ marginBottom: 24 }}>Are you sure you want to {modalMode} this plan?</div>
-            <div>
-              <Button style={{ width: 'calc(50% - 4px', marginRight: 8 }} variant="outlined" onClick={() => {
-                setCurrentModalID(-1);
-                setShowModal(false);
-              }}>Cancel</Button>
-              <Button style={{ width: 'calc(50% - 4px' }}  variant="contained" onClick={() => modalMode == "archive" ? handleArchive() : handleDelete()}>{modalMode === "archive" ? "Archive" : "Delete"}</Button>
-            </div>
-          </Card>
-        </Dialog>
       </main>
 
       <footer className={styles.footer}>
