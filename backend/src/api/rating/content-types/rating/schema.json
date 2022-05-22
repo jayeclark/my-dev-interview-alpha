@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ratings",
+  "info": {
+    "singularName": "rating",
+    "pluralName": "ratings",
+    "displayName": "Ratings"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "General": {
+      "type": "component",
+      "repeatable": false,
+      "component": "rating.rating"
+    },
+    "Technical": {
+      "type": "component",
+      "repeatable": false,
+      "component": "rating.technical"
+    },
+    "video": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::video.video",
+      "inversedBy": "ratings"
+    },
+    "date_rated": {
+      "type": "biginteger"
+    }
+  }
+}

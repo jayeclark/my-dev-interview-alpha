@@ -42,6 +42,12 @@
       "max": 10,
       "min": 0,
       "default": 5
+    },
+    "ratings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::rating.rating",
+      "mappedBy": "video"
     }
   }
 }

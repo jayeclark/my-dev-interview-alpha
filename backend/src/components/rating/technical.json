@@ -1,0 +1,48 @@
+{
+  "collectionName": "components_rating_technicals",
+  "info": {
+    "displayName": "Technical",
+    "icon": "code"
+  },
+  "options": {},
+  "attributes": {
+    "Judgement": {
+      "type": "integer",
+      "max": 10,
+      "min": 0
+    },
+    "Logical_Reasoning": {
+      "type": "integer",
+      "max": 10,
+      "min": 0
+    },
+    "Experience": {
+      "type": "integer",
+      "max": 10,
+      "min": 0
+    },
+    "Adaptability": {
+      "type": "integer",
+      "max": 10,
+      "min": 0
+    },
+    "Resilience": {
+      "type": "integer",
+      "max": 10,
+      "min": 0
+    },
+    "Syntax_and_Vocabulary": {
+      "type": "integer",
+      "max": 10,
+      "min": 0
+    },
+    "Detail_Oriented": {
+      "type": "integer"
+    },
+    "Relevance": {
+      "type": "integer",
+      "max": 10,
+      "min": 0
+    }
+  }
+}
