@@ -10,18 +10,18 @@ import profile from "../assets/profile_small.jpg"
 import practice from "../assets/camera-video-fill.svg"
 import review from "../assets/video.svg"
 import plan from "../assets/list-check.svg"
+import share from "../assets/share-fill.svg"
+import down from "../assets/caret-down-fill.svg"
 
 function NavBar() {
   const theme = useTheme();
   const router = useRouter();
   const { handleSetUser, user } = useContext(UserContext);
-  const [ showSignIn, setShowSignIn ] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
+  const [activePage, setActivePage] = useState(router.pathname)
 
   const handleSetShowSignIn = (visible: boolean) => {
     setShowSignIn(visible);
-  }
-  const isActive = (path: string) => {
-    return router.pathname === path;
   }
 
   const logout = () => {
@@ -39,30 +39,43 @@ function NavBar() {
         <div className="brand">
           <Image height="41" width="64" alt="logo" src={mdi} />
         </div>
-        <div style={{ display: 'flex', alignItems: "center" }}>
+        <div style={{ margin: "-8px 0px", height: "calc(100% + 16px)", display: 'flex', alignItems: "center" , minHeight: "100%" }}>
         {user.jwt !== '' && (
-          <div className="nav-item">
+            <div className={activePage == "/plan" ? "nav-item-active" : "nav-item"}>
             <Link href="/plan" passHref>
-              <div style={{ display: "flex", alignItems: "center", color: isActive("/") ? "#000" : "#666"}}>
-                <Image width="24" height="24" style={{ color: isActive("/plan") ? "#000" : "#666"}} src={plan} alt="plan" />
-                <div style={{ marginLeft: 8 }}>Plan</div>
+                <div className="nav-link">
+                  <div style={{ overflow: "hidden", display: "flex", maxHeight: "20px", alignItems: "center"}}>
+                    <Image width="24" height="24" src={plan} alt="plan" />
+                  </div>
+                <div style={{ paddingTop: 2 }}>Plan</div>
               </div>
             </Link>
           </div>)}
-          <div className="nav-item">
+          <div className={activePage == "/" ? "nav-item-active" : "nav-item"}>
             <Link href="/" passHref>
-              <div style={{ display: "flex", alignItems: "center", color: isActive("/") ? "#000" : "#666"}}>
-                <Image width="24" height="24" style={{ color: isActive("/") ? "#000" : "#666"}} src={practice} alt="practice" />
-                <div style={{ marginLeft: 8}}>Practice</div>
+              <div className="nav-link">
+                <div style={{ justifyContent: "center", overflow: "hidden", display: "flex", maxHeight: "20px", alignItems: "center"}}> 
+                  <Image width="24" height="24" style={{ margin: "-3px 0px" }} src={practice} alt="practice" />
+                </div>
+                <div style={{ paddingTop: 2 }}>Practice</div>
               </div>
             </Link>
           </div>
           {user.jwt !== '' && (
-            <div className="nav-item">
+            <div className={activePage == "/review" ? "nav-item-active" : "nav-item"}>
               <Link href="/review" passHref>
-                <div style={{ display: "flex", alignItems: "center", color: isActive("/") ? "#000" : "#666"}}>
-                  <Image width="18" height="18" style={{ color: isActive("/review") ? "#000" : "#666"}} src={review} alt="review" />
-                  <div style={{ marginLeft: 8}}>Review</div>
+                <div className="nav-link">
+                  <Image width="18" height="18" src={review} alt="review" />
+                  <div style={{ paddingTop: 2 }}>Review</div>
+                </div>
+              </Link>
+            </div>)}
+          {user.jwt !== '' && (
+            <div className={activePage == "/share" ? "nav-item-active" : "nav-item"}>
+              <Link href="/share" passHref>
+                <div className="nav-link">
+                  <Image width="18" height="18" src={share} alt="share" />
+                  <div style={{ paddingTop: 2 }}>Share</div>
                 </div>
               </Link>
             </div>)}
@@ -70,7 +83,15 @@ function NavBar() {
             <div className="nav-item sign-in" onClick={() => setShowSignIn(true)}>
               Sign In
             </div>)}
-          {user.jwt !== '' && (<div className="nav-item profile" onClick={logout}><Image alt="profile" width="32" height="32" style={{ border: "1px solid #dce6f1", borderRadius: 41}} src={profile}/></div>)}
+          {user.jwt !== '' && (
+            <div className="nav-item profile" style={{ marginTop: "-3px" }}>
+              <div className="nav-link" style={{ paddingTop: 8 }}>
+                <div onClick={logout}><Image alt="profile" width="24" height="24" style={{ opacity: "1!important", border: "1px solid #dce6f1", borderRadius: 41 }} src={profile} /></div>
+                <div className="nav-label" style={{ marginTop: -4 }}>Me<Image width="16" height="16" style={{ marginTop: 4, opacity: 0.7 }} src={down} alt="dropdown" />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
       <SignInForm showSignIn={showSignIn} setShowSignIn={handleSetShowSignIn} />
@@ -88,7 +109,7 @@ function NavBar() {
           box-shadow: 0px 1px 1px #dce6f1;
           top: 0;
           left: 0;
-          color: #666;
+          color: #000;
           background-color: ${theme.palette.background.paper};
         }
         .brand {
@@ -100,11 +121,45 @@ function NavBar() {
         .sign-in {
           cursor: pointer;
         }
+        .nav-item-active,
+        .nav-item:hover {
+          cursor: pointer;
+          font-weight: 500;
+          font-size: 0.8rem;
+          margin-left: 24px;
+          opacity: 1;
+          height: 100%;
+        }
         .nav-item {
           cursor: pointer;
           font-weight: 500;
-          font-size: 0.9rem;
-          margin-left: 32px;
+          font-size: 0.8rem;
+          margin-left: 24px;
+          opacity: 0.6;
+          height: 100%;
+        }
+        .nav-item.profile {
+          opacity: 1;
+        }
+        .nav-label {
+          opacity: 0.6;
+        }
+        .nav-label:hover {
+          opacity: 1;
+        }
+        .nav-link {
+          padding: 10px 8px 0px 8px;
+          text-align: center;
+          font-size: 0.75rem;
+          font-weight: 400;
+          letter-spacing: 0.75px;
+          height: 100%;
+        }
+        .nav-item-active .nav-link {
+          border-bottom: 2px solid;
+        }
+        .nav-item .nav-link {
+          border-bottom: 2px solid transparent;
         }
       `}</style>
     </>

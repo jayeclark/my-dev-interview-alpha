@@ -25,7 +25,7 @@ function Questions({ catalog, setCatalog, style, activeRecords, setActiveRecords
   const [currentS3Key, setCurrentS3Key] = useState("")
   const [showModal, setShowModal] = useState(false)
   
-  const { setEditTitle, setEditPlan, setEditPrompts, setPlanMode } = planHandlers;
+  const { setEditTitle, setEditPlan, setEditPrompts, setPlanMode } = planHandlers || {};
   
   const handleSetModalMode = (mode: string) => {
     setModalMode(mode);

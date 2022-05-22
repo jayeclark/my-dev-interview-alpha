@@ -81,7 +81,7 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
 
     const answerBody = {
       data: {
-          users: user.id,
+          users_permissions_user: user.id,
           user_id: user.id,
           question: questionId,
           title: e.target.title.value,
@@ -100,7 +100,7 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
     const videoBody = {
       data: {
           s3key: bodyText.filename,
-          users: user.id,
+          users_permissions_user: user.id,
           user_id: user.id,
           datetime: new Date(Date.now()).getTime(),
           question: questionId,

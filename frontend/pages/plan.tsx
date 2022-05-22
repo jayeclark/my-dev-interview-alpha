@@ -160,7 +160,7 @@ export default function Plans({ id }: { id: number}) {
       const body = {
         data: {
           ...payload,
-          users: user.id,
+          users_permissions_user: user.id,
           user_id: user.id,
           datetime_planned: new Date(Date.now()).getTime(),
           question: currentPlan.attributes.question.data.id,
