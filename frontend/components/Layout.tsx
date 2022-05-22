@@ -12,7 +12,7 @@ const Layout = (props: any) => {
   const [user, setuser] = useState({ username: '', id: '', email: '', jwt: '' })
 
   const handleSetUser = (user: any) => {
-    localStorage.setItem("jwt", user.jwt);
+    localStorage.setItem("mdi-session-access-token", user.jwt);
     setuser(user);
   }
 
