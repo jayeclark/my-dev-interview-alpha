@@ -31,7 +31,7 @@ function Videos({ allRecords, activeRecords, setActiveRecords, filterBy, handler
           </svg>
           <div style={{marginLeft: 8}}>
             {v.title && (<>{v.title}<br/></>)}
-            {v.attributes.rating && (<>{formattedRating(v.attributes.rating)}&nbsp;&nbsp;</>)} 
+            {v.attributes.rating >= 0 && (<>{formattedRating(v.attributes.rating)}&nbsp;&nbsp;</>)} 
             <span style={{ fontSize: 'small', opacity: 0.5 }}>{formattedDate(v.attributes.datetime)}</span><br />
           </div>
           <div style={{ flexGrow: 1, margin: '0 8px', display: 'flex', flexWrap: 'nowrap', justifyContent: 'flex-end'}}>

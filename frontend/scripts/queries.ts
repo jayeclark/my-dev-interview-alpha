@@ -35,6 +35,43 @@ query getQuestion($id: ID) {
 }
 `
 
+export const getLink = `
+query getLink($slug: String) {
+  links(filters: { slug: {eq: $slug}}) {
+    data {
+      id
+      attributes {
+        slug
+        feedback
+        user_id
+        videos {
+          data {
+            id
+            attributes {
+              s3key
+              answer {
+                data {
+                  attributes {
+                    question {
+                      data {
+                        attributes {
+                          question
+                        }
+                      }
+                    }
+                    title
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`
+
 export const getVideos = `
 query getVideos($id: Long, $archive: Boolean) {
   answers(filters: { user_id: { eq: $id }, videos: { archive: { eq: $archive }} }, pagination: { start: 0, limit: 1000 }) {

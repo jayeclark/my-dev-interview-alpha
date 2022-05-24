@@ -35,7 +35,7 @@ function NavBar() {
 
   return (
     <>
-      <nav className="navigation">
+      <nav className="navigation" style={{ zIndex: 999999 }}>
         <div className="brand">
           <Image height="41" width="64" alt="logo" src={mdi} />
         </div>
@@ -80,8 +80,10 @@ function NavBar() {
               </Link>
             </div>)}
           {user.jwt === '' && (
-            <div className="nav-item sign-in" onClick={() => setShowSignIn(true)}>
-              Sign In
+            <div className="nav-item sign-in" onClick={() => setShowSignIn(true)} style={{ display: "flex", alignItems: "center", opacity: 1}}>
+              <div style={{ margin: "auto 0px", color: "#0a66c2!important", border: "1px solid #0a66c2", padding: "5px 15px", borderRadius: 50, fontWeight: 600, fontSize: "1rem" }}>
+                <span style={{ color: "#0a66c2"}}>Sign in</span>
+              </div>
             </div>)}
           {user.jwt !== '' && (
             <div className="nav-item profile" style={{ marginTop: "-3px" }}>

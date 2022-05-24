@@ -125,7 +125,8 @@ export default function Share() {
       slug,
       videos: [...activeRecords],
       "users_permissions_user": user.id,
-      user_id: user.id
+      user_id: user.id,
+      feedback: requestFeedback
     }
     console.log(data)
     const headers = {
@@ -206,12 +207,12 @@ export default function Share() {
             <div><h1 style={{ marginTop: 0 }}></h1></div>
             <div style={{ marginTop: 16, textAlign: "center" }}>Your share link has been created!</div>
             <div style={{ marginTop: 16, textAlign: "center" }}>
-              <a style={{ color: theme.palette.primary.main }} href={`/social/${lastLink}`} target="_blank" rel="noreferrer">{window ? window.location.hostname : ""}/social/{lastLink}</a>
+              <a style={{ color: theme.palette.primary.main }} href={`/social/${lastLink}`} target="_blank" rel="noreferrer">{window ? window.location.hostname : ""}{window && window.location.port ? `:${window.location.port}` : ""}/social/{lastLink}</a>
             </div>
             <div style={{ marginTop: 16, textAlign: "center" }}>
               <Button variant="contained" style={{ width: "100%"  }} onClick={() => {
                 if (window) {
-                  const text = `${window ? window.location.hostname : ""}/social/${lastLink}`
+                  const text = `${window ? window.location.hostname : ""}${window && window.location.port ? `:${window.location.port}` : ""}/social/${lastLink}`
                   navigator.clipboard.writeText(text).then(() => {
                     setConfirmCopy(true)
                   })
@@ -227,15 +228,6 @@ export default function Share() {
           message="Link copied to clipboard"
         />
       </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://github.com/jayeclark"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          &copy; 2022 Jay Clark
-        </a>
-      </footer>
       <style jsx>{`
         main {
           display: flex;

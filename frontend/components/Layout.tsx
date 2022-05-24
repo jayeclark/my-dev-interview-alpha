@@ -62,6 +62,15 @@ const Layout = (props: any) => {
           <NavBar />
         </header>
         <div style={{ paddingTop: "57px" }}>{props.children}</div>
+        <footer style={{ fontSize: "0.8rem", color: "rgb(0,0,0,0.6)", backgroundColor: theme.palette.background.default, display: "flex", flex: 1, padding: "1rem 0", borderTop: "1px solid #eaeaea", justifyContent: "center", alignItems: "center" }}>
+          <div><a
+            href="https://github.com/jayeclark"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            &copy; 2022 Jay Clark
+          </a> | Terms &amp; Conditions | Privacy</div>
+        </footer>
         </Box>
       </UserContext.Provider>
     </>

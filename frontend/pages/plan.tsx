@@ -436,16 +436,6 @@ export default function Plans({ id }: { id: number}) {
           </>)}
         </section>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://github.com/jayeclark"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          &copy; 2022 Jay Clark
-        </a>
-      </footer>
       <style jsx>{`
         main {
           display: flex;

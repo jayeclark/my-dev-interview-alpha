@@ -30,7 +30,8 @@ function SignInForm({ showSignIn, setShowSignIn }: SignInFormProps) {
   const [ signup, setSignup ] = useState(false);
   const [ showPassword, setShowPassword ] = useState(false);
   const [ showConfirm, setShowConfirm ] = useState(false);
-  const [ showGoogle, setShowGoogle ] = useState(false)
+  const [showGoogle, setShowGoogle] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const createUser = async ({ email, password }: { email: string; password: string}) => {
     if (typeof window === "undefined") {
@@ -44,9 +45,8 @@ function SignInForm({ showSignIn, setShowSignIn }: SignInFormProps) {
     }
     console.log('body')
     console.log(body);
-    return new Promise((resolve, reject) => {
-      try {
-        axios.post(url, body).then(response => {
+    try {
+        await axios.post(url, body).then(response => {
           console.log(response.data);
           
           handleSetUser({
@@ -57,14 +57,11 @@ function SignInForm({ showSignIn, setShowSignIn }: SignInFormProps) {
           })
           setShowSignIn(false);
           setSignup(false);
-          resolve(response);
         })
       } catch (e) {
-        console.log(e)
-        reject(e);
+        setSubmitError("An unexpected error occurred. Please try again later.")
+      
       }
-    })
-
     }
   
   const authUser = async ({ email, password }: { email: string; password: string}) => {
@@ -76,13 +73,8 @@ function SignInForm({ showSignIn, setShowSignIn }: SignInFormProps) {
       identifier: email, 
       password: password
     }
-    console.log('body')
-    console.log(body);
-    return new Promise((resolve, reject) => {
-      try {
-        axios.post(url, body).then(response => {
-          console.log(response.data);
-          
+    await axios.post(url, body).then(response => {
+        if (response.status == 200) {
           handleSetUser({
             email: response.data.user.email,
             jwt: response.data.jwt,
@@ -91,12 +83,13 @@ function SignInForm({ showSignIn, setShowSignIn }: SignInFormProps) {
           })
           setShowSignIn(false);
           setSignup(false);
-          resolve(response);
-        })
-      } catch (e) {
-        console.log(e)
-        reject(e)
-      }
+        } 
+      }).catch((e: any) => {
+        if (e.response.status == 400) {
+          setSubmitError("Incorrect username or password.")
+        } else {
+          setSubmitError("An unexpected error occurred. Please try again later.")
+        }
     })
   }
 
@@ -142,11 +135,11 @@ function SignInForm({ showSignIn, setShowSignIn }: SignInFormProps) {
           <div style={{ paddingBottom: 16, cursor: 'pointer', textAlign: 'right', fontWeight: '600' }} onClick={() => { setShowSignIn(false); }}>
             <Image src={Close} alt="close sign in dialog" />
           </div>
-          <Button variant="google" size="large" style={{ marginBottom: 16, width: "100%"}} onClick={(redirectToGoogle)}>
+          <Button variant="google" size="large" style={{ marginBottom: 16, width: "100%" }} onClick={() => { setSubmitError(""), redirectToGoogle() }}>
             <Image height="24" width="24" src={Google} alt="Google Logo"/>
             <span style={{ marginLeft: 8 }}>Sign in with Google</span>
           </Button>
-          <Button variant="github" size="large" style={{ marginBottom: 16, width: "100%"}} onClick={(redirectToGitHub)}>
+          <Button variant="github" size="large" style={{ marginBottom: 16, width: "100%" }} onClick={() => { setSubmitError(""), redirectToGitHub() }}>
             <Image height="24" width="24" src={Github} alt="GitHub Logo" />
             <span style={{ marginLeft: 8 }}>Sign in with GitHub</span>
           </Button>
@@ -163,21 +156,22 @@ function SignInForm({ showSignIn, setShowSignIn }: SignInFormProps) {
             }
 
           }}>
-            <TextField id="email" type="text" label="Email" name="email" fullWidth sx={{ mb: 2 }} />
+            <TextField id="email" type="text" label="Email" name="email" fullWidth sx={{ mb: 2 }} onChange={() => setSubmitError('')}/>
             <div style={{ position: 'relative' }}>
-              <TextField id="password" type={showPassword ? "text" : "password"} label="Password" name="password"  fullWidth  sx={{ mb: 2 }} />
+              <TextField id="password" type={showPassword ? "text" : "password"} label="Password" name="password" fullWidth  sx={{ mb: 2 }} onChange={() => setSubmitError('')}/>
               <div style={{ position: 'absolute', top: 20, right: 16 }} onClick={() => setShowPassword(!showPassword)}>
                 <Image style={{ cursor: 'pointer', color: 'inherit' }} src={showPassword ? EyeFillSlash : EyeFill} alt={showPassword ? "Hide Password" : "Show Password"}/>
               </div>
             </div>
             {signup && (
               <div style={{ position: 'relative' }}>
-                <TextField id="password2" type={showConfirm ? "text" : "password"} label="Confirm Password" name="password2"  fullWidth sx={{ mb: 2 }} />
+                <TextField id="password2" type={showConfirm ? "text" : "password"} label="Confirm Password" name="password2"  fullWidth sx={{ mb: 2 }} onChange={() => setSubmitError('')} />
                 <div style={{ position: 'absolute', top: 20, right: 16 }} onClick={() => setShowConfirm(!showConfirm)}>
                   <Image style={{ cursor: 'pointer', color: 'inherit' }} src={showConfirm ? EyeFillSlash : EyeFill} alt={showPassword ? "Hide Password Confirmation" : "Show Password Confirmation"}/>
                 </div>
               </div>
             )}
+            <div style={{ fontSize: "0.75rem", marginTop: theme.spacing(-1), marginBottom: theme.spacing(1) }}><span style={{ color: "red" }}>{submitError ? submitError : "" }</span>&nbsp;</div>
             <Button variant="contained" size="large" style={{ width: '100%'}} type="submit">
               {signup ? "Sign Up with Email" : "Sign In with Email"}
             </Button>

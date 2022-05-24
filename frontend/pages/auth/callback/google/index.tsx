@@ -46,16 +46,6 @@ const Authed: NextPage = () => {
           Congrats! You have successfully logged in. Please wait while you are directed back to the main application.
         </section>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          &copy; 2022 Jay Clark
-        </a>
-      </footer>
       <style jsx>{`
         .question {
           width: calc(min(72vh, 72vw));

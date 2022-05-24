@@ -113,15 +113,6 @@ export default function Videos({ id }: { id: number}) {
         <video style={{ width: '100%', maxWidth: '100%', borderRadius: 6 }} src={activeRecords[0] ? `https://d1lt2f6ccu4rh4.cloudfront.net/${getS3Key(activeRecords[0])}` : ''} controls autoPlay />
         </section>
       </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://github.com/jayeclark"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          &copy; 2022 Jay Clark
-        </a>
-      </footer>
       <style jsx>{`
         main {
           display: flex;
