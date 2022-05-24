@@ -11,10 +11,10 @@
   },
   "devDependencies": {},
   "dependencies": {
-    "@strapi/plugin-documentation": "^4.1.11",
+    "@strapi/plugin-documentation": "4.1.8",
     "@strapi/plugin-graphql": "^4.1.8",
     "@strapi/plugin-i18n": "4.1.8",
-    "@strapi/plugin-upload": "^4.1.8",
+    "@strapi/plugin-upload": "4.1.8",
     "@strapi/plugin-users-permissions": "4.1.8",
     "@strapi/strapi": "4.1.8",
     "pg": "8.6.0"
