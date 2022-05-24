@@ -207,11 +207,11 @@ export default function Share() {
             <div><h1 style={{ marginTop: 0 }}></h1></div>
             <div style={{ marginTop: 16, textAlign: "center" }}>Your share link has been created!</div>
             <div style={{ marginTop: 16, textAlign: "center" }}>
-              <a style={{ color: theme.palette.primary.main }} href={`/social/${lastLink}`} target="_blank" rel="noreferrer">{window ? window.location.hostname : ""}{window && window.location.port ? `:${window.location.port}` : ""}/social/{lastLink}</a>
+              <a style={{ color: theme.palette.primary.main }} href={`/social/${lastLink}`} target="_blank" rel="noreferrer">{typeof window  !== undefined ? window.location.hostname : ""}{typeof window !== undefined && window.location.port ? `:${window.location.port}` : ""}/social/{lastLink}</a>
             </div>
             <div style={{ marginTop: 16, textAlign: "center" }}>
               <Button variant="contained" style={{ width: "100%"  }} onClick={() => {
-                if (window) {
+                if (typeof window !== undefined) {
                   const text = `${window ? window.location.hostname : ""}${window && window.location.port ? `:${window.location.port}` : ""}/social/${lastLink}`
                   navigator.clipboard.writeText(text).then(() => {
                     setConfirmCopy(true)
