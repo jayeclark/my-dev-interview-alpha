@@ -1,6 +1,6 @@
 const vars = process.env;
+let URL = 'http://localhost:1337'
 if (vars.PUBLIC_URL) { URL = vars.PUBLIC_URL}
-console.log(PORT)
 module.exports = ({ env }) => ({
   host: env('HOST', '0.0.0.0'),
   port: env.int('PORT', 1337),
