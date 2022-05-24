@@ -28,6 +28,22 @@
     },
     "user_id": {
       "type": "biginteger"
+    },
+    "feedback": {
+      "type": "boolean",
+      "default": true
+    },
+    "general_feedback": {
+      "type": "boolean",
+      "default": true
+    },
+    "technical_feedback": {
+      "type": "boolean",
+      "default": false
+    },
+    "qualitative_feedback": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

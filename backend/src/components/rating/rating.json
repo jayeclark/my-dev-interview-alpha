@@ -7,42 +7,42 @@
   },
   "options": {},
   "attributes": {
-    "Confident": {
+    "confident": {
       "type": "integer",
       "max": 10,
       "min": 0
     },
-    "Articulate": {
+    "articulate": {
       "type": "integer",
       "max": 10,
       "min": 0
     },
-    "Positive": {
+    "positive": {
       "type": "integer",
       "max": 10,
       "min": 0
     },
-    "Relatable": {
+    "relatable": {
       "type": "integer",
       "max": 10,
       "min": 0
     },
-    "Focused": {
+    "focused": {
       "type": "integer",
       "max": 10,
       "min": 0
     },
-    "Capable": {
+    "capable": {
       "type": "integer",
       "max": 10,
       "min": 0
     },
-    "Experienced": {
+    "experienced": {
       "type": "integer",
       "max": 10,
       "min": 0
     },
-    "Insightful": {
+    "insightful": {
       "type": "integer",
       "required": false,
       "max": 10,

@@ -4,7 +4,8 @@
   "info": {
     "singularName": "rating",
     "pluralName": "ratings",
-    "displayName": "Ratings"
+    "displayName": "Ratings",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -29,6 +30,14 @@
     },
     "date_rated": {
       "type": "biginteger"
+    },
+    "open_ended": {
+      "type": "component",
+      "repeatable": false,
+      "component": "rating.open-ended"
+    },
+    "link": {
+      "type": "string"
     }
   }
 }

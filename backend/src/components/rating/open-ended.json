@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_rating_open_endeds",
+  "info": {
+    "displayName": "Open_Ended",
+    "icon": "question"
+  },
+  "options": {},
+  "attributes": {
+    "did_well": {
+      "type": "text"
+    },
+    "did_poorly": {
+      "type": "text"
+    },
+    "suggestion": {
+      "type": "text"
+    },
+    "example_quality": {
+      "type": "text"
+    },
+    "story_quality": {
+      "type": "text"
+    }
+  }
+}
