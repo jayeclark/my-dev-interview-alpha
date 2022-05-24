@@ -13,7 +13,6 @@ const VideoPreview = ({ stream }: { stream: MediaStream | null }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    let timeDelay = setTimeout(() => {}, 10);
     if (stream && stream.active) {
       if (videoRef.current) {
         videoRef.current.srcObject = stream
@@ -110,7 +109,6 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
     }
 
     axios.post(`${API_URL}/api/videos`, videoBody, { headers }).then(res => {
-      console.log(res);
       setSaving(false);
       setShowSave(false);
       setHasSaved(true);

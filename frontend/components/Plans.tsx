@@ -59,7 +59,6 @@ function Plans({ allRecords, activeRecords, filterBy, setActiveRecords, handlers
             <abbr title="Record an answer">
               <svg style={{ margin: 4 }} onClick={(e) => {
                 e.stopPropagation();
-                console.log('clicked');
                 setEditTitle(false);
                 setEditPlan(false);
                 setEditPrompts(false);

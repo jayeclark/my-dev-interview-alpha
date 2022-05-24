@@ -128,12 +128,10 @@ export default function Share() {
       user_id: user.id,
       feedback: requestFeedback
     }
-    console.log(data)
     const headers = {
       Authorization: `Bearer ${user.jwt}`
     }
     await axios.post(`${API_URL}/api/links`, { data }, { headers }).then((res) => {
-      console.log(res)
       setLastLink(slug);
       setShowConfirmation(true);
     })

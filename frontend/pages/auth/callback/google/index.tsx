@@ -16,9 +16,7 @@ const Authed: NextPage = () => {
   const authGoogleUser = async () => {
     const query = router.query
     if (query.hasOwnProperty("access_token")) {
-      console.log('q', query)
       const response = await axios.get(`${API_URL}/api/auth/google/callback`, { params: { access_token: query.access_token }})
-      console.log('r', response)
       const data = await response.data
       handleSetUser({
             email: data.user.email,

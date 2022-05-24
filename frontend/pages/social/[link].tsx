@@ -29,9 +29,7 @@ export default function Link() {
   const getLinkDetails = async () => {
     let videos: Array<any> = []
     let questions: Array<any> = []
-    console.log('q', router.query)
     const linkSlug: string = router.query.link as string
-    console.log("slug", linkSlug)
     const response = await fetch(`${API_URL}/graphql`, {
         method: 'POST',
         headers: {
@@ -45,9 +43,7 @@ export default function Link() {
         })
     })
     const parsedResponse = await response.json();
-    console.log(parsedResponse)
     const data = await parsedResponse.data.links.data[0];
-    console.log(data)
     const feedback = await data.attributes.feedback;
     setShowFeedback(feedback);
     const vids = await data.attributes.videos.data;
@@ -60,7 +56,6 @@ export default function Link() {
       videos.push(temp)
       questions.push(v.attributes.answer.data.attributes.question.data.attributes.question)
     })
-    console.log('vids', videos)
     return { videos, questions };
   }
 

@@ -89,7 +89,6 @@ function Questions({ catalog, setCatalog, style, activeRecords, setActiveRecords
     }
     axios.put(`${API_URL}/api/answers/${currentModalID}`, body, {headers}).then(res => {
       removeFromCatalog(currentModalID.toString());
-      console.log(res);
       setShowModal(false);
       setCurrentModalID(-1);
     })
@@ -116,7 +115,6 @@ function Questions({ catalog, setCatalog, style, activeRecords, setActiveRecords
       Authorization: `Bearer ${user.jwt}`
     }
     axios.delete(`${API_URL}/api/answers/${currentModalID}`, { headers }).then(async (res) => {
-      console.log(res)
       removeFromCatalog(currentModalID.toString());
       setShowModal(false);
       setCurrentModalID(-1);

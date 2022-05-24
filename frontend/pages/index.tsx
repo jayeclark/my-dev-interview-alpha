@@ -20,7 +20,6 @@ export const API_URL = process.env.API_URL || url
 
 const Home: NextPage = () => {
   const theme = useTheme();
-  console.log('url', API_URL);
   const askedArray: Array<number> = []
   const filterArray: Array<string> = []
   const [question, setQuestion] = useState({id: -1, content: '', category: ''});
@@ -109,7 +108,6 @@ const Home: NextPage = () => {
     while (filters.length > 0 && !filters.includes(nextQuestion.data.attributes.category.split("_")[0])) {
       nextQuestion = await getRandomQuestion(length);
     }
-    console.log(nextQuestion)
 
     return {
       id: nextQuestion.data.id,
@@ -129,9 +127,7 @@ const Home: NextPage = () => {
 
   const handleSkip = async () => {
     getNextQuestion(count).then((res) => {
-      console.log(res);
       setQuestion(res);
-      setTimeout(() => console.log(question), 100);
     })
   }
 
@@ -142,14 +138,12 @@ const Home: NextPage = () => {
   }
 
   const toggleFilter = (filter: string) => {
-    console.log("toggled")
     let newFilters;
     if (filters.includes(filter)) {
       newFilters = filters.filter(f => f !== filter);
     } else {
       newFilters = [...filters, filter];
     }
-    console.log(newFilters);
     setFilters(newFilters);
   }
 

@@ -43,12 +43,8 @@ function SignInForm({ showSignIn, setShowSignIn }: SignInFormProps) {
       email: email,
       password: password
     }
-    console.log('body')
-    console.log(body);
     try {
         await axios.post(url, body).then(response => {
-          console.log(response.data);
-          
           handleSetUser({
             email: response.data.user.email,
             jwt: response.data.jwt,
@@ -106,21 +102,17 @@ function SignInForm({ showSignIn, setShowSignIn }: SignInFormProps) {
   }
 
   const retrieveUserData = async () => {
-    console.log("called")
     const jwt = localStorage.getItem("mdi-session-access-token")
     if (jwt) {
-      console.log("token")
       const decoded = jwtDecode(jwt)
       const response = await axios.get(`${API_URL}/api/users/me`, { headers: { Authorization: `Bearer ${jwt}`}})
       const data = await response.data
-      console.log(data)
       handleSetUser({
         email: data.email,
         jwt: jwt,
         username: data.username,
         id: data.id
       })
-      console.log(decoded)
       setShowGoogle(false)
       setShowSignIn(false)
     }
@@ -148,7 +140,6 @@ function SignInForm({ showSignIn, setShowSignIn }: SignInFormProps) {
             e.preventDefault();
             if (signup) {
               const form = e.target as HTMLFormElement;
-              console.log(form.email.value, form.password.value);
               createUser({ email: form.email.value, password: form.password.value })
             } else {
               const form = e.target as HTMLFormElement;

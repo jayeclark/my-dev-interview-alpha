@@ -7,17 +7,15 @@ export default async function handler(
   res: NextApiResponse<any>
 ) {
   const { authorization } = req.headers
-  console.log(authorization)
   const { key } = req.query
   try {
     const response = await s3.deleteObject({ 
       Bucket: 'mydevinterview-videos',
       Key: key as string,
     }).promise()
-    console.log('sent')
     res.send({ response, deleted: key });
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 
 }

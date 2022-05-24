@@ -18,17 +18,12 @@ export default async function handler(
   const data: any = await new Promise((resolve, reject) => {
     const form = formidable({ multiples: true });
     form.parse(req, (err, fields, files) => {
-      console.log('parsed');
-      console.log(files);
       parsedFiles = files;
-      console.log(fields);
-      console.log(err);
       if (err) reject({ err })
       resolve({ err, fields, files })
     })
   })
   
-  console.log(data);
   const file = await data.files.file;
   const { id } = req.query;
   const timestamp = new Date(Date.now()).getTime();
@@ -41,10 +36,9 @@ export default async function handler(
       Body: fs.createReadStream(file.filepath),
       ContentType: 'audio/mpeg'
     }).promise()
-    console.log('sent')
     res.send({ response, filename: key });
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 
 }

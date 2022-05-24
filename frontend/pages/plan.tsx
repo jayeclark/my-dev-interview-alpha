@@ -78,7 +78,6 @@ export default function Plans({ id }: { id: number}) {
           id: userId
         }
       }
-    console.log(request);
     const result = await fetch(`${API_URL}/graphql`, {
       headers: {
         Authorization: `Bearer ${user.jwt}`,
@@ -89,7 +88,6 @@ export default function Plans({ id }: { id: number}) {
     })
     const parsed = await result.json()
     const answers = await parsed.data.answers
-    console.log(answers);
     return answers.data;
   }
 
@@ -99,10 +97,8 @@ export default function Plans({ id }: { id: number}) {
     if (user.jwt) {
       handleGetPlans(user.id).then((res) => {
         const sorted = res.sort((a: any, b: any) => a.attributes.question.data.attributes.category - b.attributes.question.data.attributes.category);
-        console.log(sorted);
         const reduced = sorted.reduce((coll: any, item: any) => {
           const index = coll.findIndex((x: any) => x.qid == item.attributes.question.data.id);
-          console.log(index);
           if (index >= 0 && item.attributes.datetime_planned > 0) {
             coll[index].records.push(item)
           } else if (item.attributes.datetime_planned > 0) {
@@ -139,10 +135,8 @@ export default function Plans({ id }: { id: number}) {
         const newPlans = [...newQ.records];
         newPlans[pIndex] = newPlan;
         newQ.records = newPlans;
-        console.log(newPlan);
         const newCatalog = [ ...catalog ];
         newCatalog[qIndex] = newQ;
-        console.log(newCatalog[qIndex]);
         const key = Object.keys(payload)[0]
         if (key === "title") {
           setEditTitle(false)
@@ -168,7 +162,6 @@ export default function Plans({ id }: { id: number}) {
       }
 
       await axios.post(`${API_URL}/api/answers/`, body, { headers }).then((res) => {
-        console.log(res);
         const qid = currentPlan.attributes.question.data.id;
 
         const qIndex = catalog.findIndex((q: any) => q.qid === qid);
@@ -189,10 +182,8 @@ export default function Plans({ id }: { id: number}) {
         };
         newQ.records = newQ.records.filter((x: any) => x.id !== '0')
         newQ.records.push(plan);
-        console.log('plan', plan);
         const newCatalog = [ ...catalog ];
         newCatalog[qIndex] = newQ;
-        console.log(newCatalog[qIndex]);
         const key = Object.keys(payload)[0]
         if (key === "title") {
           setEditTitle(false)
@@ -231,7 +222,6 @@ export default function Plans({ id }: { id: number}) {
     };
     // Add in a check -- don't add the question to the catalog if already there
     const newPlanCatalog = [...catalog, { qid: qid, question: question, plans: [] }]
-    console.log(newPlanCatalog);
     setCatalog(newPlanCatalog);
     setPlanMode("create");
     setCurrentPlan(newPlan);
@@ -263,9 +253,7 @@ export default function Plans({ id }: { id: number}) {
   }
   
   const handleSearch = async (e: any) => {
-    console.log("searchcaled")
     e.preventDefault();
-    console.log(e.target.search.value)
     if (searchFor.length > 0) {
         const request = {
           query: getQuestions,
@@ -273,7 +261,6 @@ export default function Plans({ id }: { id: number}) {
             search: e.target.search.value,
           }
         }
-      console.log(request);
       const result = await fetch(`${API_URL}/graphql`, {
         headers: {
           Authorization: `Bearer ${user.jwt}`,
@@ -285,7 +272,6 @@ export default function Plans({ id }: { id: number}) {
 
       const parsed = await result.json()
       const questions = await parsed.data.questions
-      console.log(questions);
       const questionData = await questions.data;
       setSearchResults(questionData);
       setSearched(true);
@@ -294,8 +280,6 @@ export default function Plans({ id }: { id: number}) {
     }
   }
 
-  console.log('curr', currentPlan);
-  console.log('mode', planMode);
 
   return (
     <div className={styles.container}>
