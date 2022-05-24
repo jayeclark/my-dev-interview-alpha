@@ -8,6 +8,6 @@ RUN yarn install --ignore-optional
 
 RUN yarn run build
 
-EXPOSE 1337
+EXPOSE $PORT
 
 CMD "yarn" "run" "start"
