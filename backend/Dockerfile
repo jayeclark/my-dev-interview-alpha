@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . /app
 
-RUN yarn install
+RUN yarn install --ignore-optional
 
 RUN yarn run build
 
