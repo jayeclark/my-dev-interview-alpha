@@ -35,61 +35,63 @@ function NavBar() {
 
   return (
     <>
-      <nav className="navigation" style={{ zIndex: 999999 }}>
+      <nav className="navigation">
         <div className="brand">
           <Image height="41" width="64" alt="logo" src={mdi} />
         </div>
-        <div style={{ margin: "-8px 0px", height: "calc(100% + 16px)", display: 'flex', alignItems: "center" , minHeight: "100%" }}>
+        <div className="menu-options">
         {user.jwt !== '' && (
-            <div className={activePage == "/plan" ? "nav-item-active" : "nav-item"}>
+            <div className={activePage == "/plan" ? "nav-item-active" : "nav-item"} onClick={() => setActivePage("/plan")}>
             <Link href="/plan" passHref>
                 <div className="nav-link">
-                  <div style={{ overflow: "hidden", display: "flex", maxHeight: "20px", alignItems: "center"}}>
+                  <div className="option-icon" >
                     <Image width="24" height="24" src={plan} alt="plan" />
                   </div>
-                <div style={{ paddingTop: 2 }}>Plan</div>
+                <div className="option-label">Plan</div>
               </div>
             </Link>
           </div>)}
-          <div className={activePage == "/" ? "nav-item-active" : "nav-item"}>
+          <div className={activePage == "/" ? "nav-item-active" : "nav-item"} onClick={() => setActivePage("/")}>
             <Link href="/" passHref>
               <div className="nav-link">
-                <div style={{ justifyContent: "center", overflow: "hidden", display: "flex", maxHeight: "20px", alignItems: "center"}}> 
-                  <Image width="24" height="24" style={{ margin: "-3px 0px" }} src={practice} alt="practice" />
+                <div className="option-icon"> 
+                  <Image width="24" height="24" className="practice-img" src={practice} alt="practice" />
                 </div>
-                <div style={{ paddingTop: 2 }}>Practice</div>
+                <div className="option-label">Practice</div>
               </div>
             </Link>
           </div>
           {user.jwt !== '' && (
-            <div className={activePage == "/review" ? "nav-item-active" : "nav-item"}>
+            <div className={activePage == "/review" ? "nav-item-active" : "nav-item"} onClick={() => setActivePage("/review")}>
               <Link href="/review" passHref>
                 <div className="nav-link">
-                  <Image width="18" height="18" src={review} alt="review" />
-                  <div style={{ paddingTop: 2 }}>Review</div>
+                    <Image width="18" height="18" src={review} alt="review" />
+                  <div className="option-label">Review</div>
                 </div>
               </Link>
             </div>)}
           {user.jwt !== '' && (
-            <div className={activePage == "/share" ? "nav-item-active" : "nav-item"}>
+            <div className={activePage == "/share" ? "nav-item-active" : "nav-item"} onClick={() => setActivePage("/share")}>
               <Link href="/share" passHref>
                 <div className="nav-link">
                   <Image width="18" height="18" src={share} alt="share" />
-                  <div style={{ paddingTop: 2 }}>Share</div>
+                  <div className="option-label">Share</div>
                 </div>
               </Link>
             </div>)}
           {user.jwt === '' && (
-            <div className="nav-item sign-in" onClick={() => setShowSignIn(true)} style={{ display: "flex", alignItems: "center", opacity: 1}}>
-              <div style={{ margin: "auto 0px", color: "#0a66c2!important", border: "1px solid #0a66c2", padding: "5px 15px", borderRadius: 50, fontWeight: 600, fontSize: "1rem" }}>
-                <span style={{ color: "#0a66c2"}}>Sign in</span>
+            <div className="nav-item sign-in-option" onClick={() => setShowSignIn(true)}>
+              <div className="sign-in">
+                <span className="sign-in-text">Sign in</span>
               </div>
             </div>)}
           {user.jwt !== '' && (
-            <div className="nav-item profile" style={{ marginTop: "-3px" }}>
-              <div className="nav-link" style={{ paddingTop: 8 }}>
-                <div onClick={logout}><Image alt="profile" width="24" height="24" style={{ opacity: "1!important", border: "1px solid #dce6f1", borderRadius: 41 }} src={profile} /></div>
-                <div className="nav-label" style={{ marginTop: -4 }}>Me<Image width="16" height="16" style={{ marginTop: 4, opacity: 0.7 }} src={down} alt="dropdown" />
+            <div className="nav-item profile-option">
+              <div className="nav-link profile-img-contaimer">
+                <div onClick={logout}><Image alt="profile" width="24" height="24" style={{ borderRadius: 41 }} src={profile} /></div>
+                <div className="profile-label">
+                  <div className="nav-label">Me</div>
+                  <Image width="16" height="16" style={{ opacity: 0.6 }} src={down} alt="dropdown" />               
                 </div>
               </div>
             </div>
@@ -112,6 +114,7 @@ function NavBar() {
           top: 0;
           left: 0;
           color: #000;
+          z-index: 999999;
           background-color: ${theme.palette.background.paper};
         }
         .brand {
@@ -120,8 +123,50 @@ function NavBar() {
           font-size: 1.35rem;
           font-weight: 600;
         }
+        .menu-options {
+          margin: 8px 0px;
+          height: calc(100% + 16px);
+          display: flex; 
+          align-items: center; 
+          min-height: 100%;
+        }
+        .option-label {
+          padding-top: 2px;
+        }
+        .practice-img {
+          margin: -3px 0px;
+        }
+        .option-icon {
+          overflow: hidden;
+          display: flex;
+          max-height: 21px; 
+          align-items: center;
+          justify-content: center; 
+        }
         .sign-in {
           cursor: pointer;
+          margin: auto 0px; 
+          color: #0a66c2!important; 
+          border: 1.5px solid #0a66c2;
+          padding: 5px 15px; 
+          border-radius: 50px;
+          font-weight: 600;
+          font-size: 1rem;
+        }
+        .sign-in-option {
+          display: flex;
+          align-items: center;
+          opacity: 1;
+        }
+        .sign-in-text {
+          color: #0a66c2;
+        }
+        .profile-option {
+          margin-top: -3px;
+          opacity: 1!important;
+        }
+        .profile-img-container {
+          padding-top: 8px;
         }
         .nav-item-active,
         .nav-item:hover {
@@ -139,9 +184,6 @@ function NavBar() {
           margin-left: 24px;
           opacity: 0.6;
           height: 100%;
-        }
-        .nav-item.profile {
-          opacity: 1;
         }
         .nav-label {
           opacity: 0.6;
@@ -162,6 +204,11 @@ function NavBar() {
         }
         .nav-item .nav-link {
           border-bottom: 2px solid transparent;
+        }
+        .profile-label {
+           display: flex; 
+           flex-wrap: nowrap; 
+           align-items: center;
         }
       `}</style>
     </>

@@ -76,32 +76,44 @@ export default function Share() {
   
     if (catalog.length == 0) {
       handleGetVideos(user.id).then((res) => {
-        const sorted = res.sort((a: any, b: any) => a.attributes.question.data.attributes.category - b.attributes.question.data.attributes.category);
-        const reduced = sorted.reduce((coll: any, item: any) => {
-          const index = coll.findIndex((x: any) => x.qid == item.attributes.question.data.id);
-          const videos = item.attributes.videos.data
-          const title = item.attributes.title
-          const question = item.attributes.question
-          if (index >= 0) {
-            coll[index].records.push(...videos.filter((x: any) => x.attributes.archive === false).map((x: any) => {
-              x.title = title;
-              x.question = question;
-              return x;
-            }))
-          } else {
-            coll.push({
-              qid: item.attributes.question.data.id,
-              question: item.attributes.question.data.attributes.question,
-              records: [...videos.filter((x: any) => x.attributes.archive === false).map((x: any) => {
-              x.title = title;
-              x.question = question;
-              return x;
-            })]
-            }) 
-          }
-          return coll;
-        }, [])
-        setCatalog(reduced);
+        if (res.length > 0) {
+          const sorted = res.sort((a: any, b: any) => {
+            const questionA = a.attributes.question
+            const questionB = b.attributes.question
+            if (questionB?.data.attributes.category < questionA?.data.attributes.category) {
+              return 1
+            }
+            if (questionB?.data.attributes.category > questionA?.data.attributes.category) {
+              return -1
+            }
+            return 0
+          });
+          const reduced = sorted.reduce((coll: any, item: any) => {
+            const index = coll.findIndex((x: any) => x.qid == item.attributes.question.data.id);
+            const videos = item.attributes.videos.data
+            const title = item.attributes.title
+            const question = item.attributes.question
+            if (index >= 0) {
+              coll[index].records.push(...videos.filter((x: any) => x.attributes.archive === false).map((x: any) => {
+                x.title = title;
+                x.question = question;
+                return x;
+              }))
+            } else {
+              coll.push({
+                qid: item.attributes.question.data.id,
+                question: item.attributes.question.data.attributes.question,
+                records: [...videos.filter((x: any) => x.attributes.archive === false).map((x: any) => {
+                x.title = title;
+                x.question = question;
+                return x;
+              })]
+              }) 
+            }
+            return coll;
+          }, [])
+          setCatalog(reduced);
+        }
       })
     }
 
@@ -160,7 +172,7 @@ export default function Share() {
         </section>
         <section className={shareMode == "single" ? "viewer" : "viewer-double"}>
           <h1>Create a Video Share Link</h1>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: 16 }}>
+          <div className="toggle-buttons">
             <ToggleButtonGroup
               color="primary"
               value={shareMode}
@@ -176,39 +188,41 @@ export default function Share() {
             </FormGroup>
           </div>
 
-          <video style={{ width: shareMode =="single" ? '100%' : '', maxWidth: shareMode =="single" ? '100%' : '', borderRadius: 6 }} src={activeRecords[0] ? `https://d1lt2f6ccu4rh4.cloudfront.net/${getS3Key(activeRecords[0])}` : ''} controls autoPlay />
-          {shareMode == "side-by-side" && <video style={{ marginLeft: 16, maxWidth: '50%', borderRadius: 6 }} src={activeRecords[1] ? `https://d1lt2f6ccu4rh4.cloudfront.net/${getS3Key(activeRecords[1])}` : ''} controls autoPlay />}
+          <video src={activeRecords[0] ? `https://d1lt2f6ccu4rh4.cloudfront.net/${getS3Key(activeRecords[0])}` : ''} controls autoPlay />
+          {shareMode == "side-by-side" && <video className="ml-2" src={activeRecords[1] ? `https://d1lt2f6ccu4rh4.cloudfront.net/${getS3Key(activeRecords[1])}` : ''} controls autoPlay />}
           { ((shareMode == "single" && activeRecords[0] == "") || (shareMode == "side-by-side" && activeRecords.length < 2)) &&
-            <span style={{ fontSize: "0.85rem" }}>
-            <p>Please select {(shareMode == "side-by-side" && activeRecords[0] == '') ? "two videos" : "a video"} from the left column to continue.</p>
-          </span>
+            <span className="txt-small">
+              <p>Please select {(shareMode == "side-by-side" && activeRecords[0] == '') ? "two videos" : "a video"} from the left column to continue.</p>
+            </span>
           }
           {((shareMode == "single" && activeRecords[0] !== "") || (shareMode == "side-by-side" && activeRecords.length == 2)) &&
-            <span style={{ fontSize: "0.85rem" }}>
+            <span className="txt-small">
             <p>Clicking &quot;share&quot; will create a public link to {shareMode == "single" ? "this video" : "these videos"}. You can find or delete a link at any time in account settings.</p>
             <p>{requestFeedback ? "People who visit the link will be able to rate your video answer and provide feedback (click Preview to see what they'll see). If you wish to disable this feature, toggle the \"request feedback\" button above." : "People who visit the link will not be able to provide feedback on your video answer. If you wish to enable this feature, toggle the \"request feedback\" button above."}</p>
           </span>
           }
-          <Button disabled={shareMode == "single" ? activeRecords[0] == "" : activeRecords.length < 2 } style={{ marginTop: 8, width: "calc(50% - 8px)", marginRight: 16 }} variant="outlined" onClick={() => setShowPreview(true)}>Preview</Button>
-          <Button disabled={shareMode == "single" ? activeRecords[0] == "" : activeRecords.length < 2 } style={{ marginTop: 8, width: "calc(50% - 8px)" }} variant="contained" onClick={createLink}>Share</Button>
+          <Button disabled={shareMode == "single" ? activeRecords[0] == "" : activeRecords.length < 2} sx={{ width: "calc(50% - 8px)", mt: 1 }} variant="outlined" onClick={() => setShowPreview(true)}>Preview</Button>
+          <Button disabled={shareMode == "single" ? activeRecords[0] == "" : activeRecords.length < 2} sx={{ width: "calc(50% - 8px)", mt: 1, ml: 2 }} variant="contained" onClick={createLink}>Share</Button>
         </section>
         <Dialog open={showPreview}>
-          <div style={{ position: "relative", width: "69vw", height: "90vh", padding: 10 }}>
-            <div style={{ cursor: "pointer", position: "absolute", right: "10px", top: "10px" }} onClick={() => setShowPreview(false)}><Image src={close} width={18} height={18} alt="close" /></div>
-            <div><h1 style={{ marginTop: 0 }}>Share Link Preview</h1></div>
+          <div className="preview-pane">
+            <div className="close-icon" onClick={() => setShowPreview(false)}>
+              <Image src={close} width={18} height={18} alt="close" />
+            </div>
+            <div><h1 className="mt-0">Share Link Preview</h1></div>
             <div>Link preview goes here.</div>
           </div>
         </Dialog>
         <Dialog open={showConfirmation}>
-          <div style={{ position: "relative", padding: 16 }}>
-            <div style={{ cursor: "pointer", position: "absolute", right: "10px", top: "10px" }} onClick={() => { setShowConfirmation(false); setActiveRecords(['']); }}><Image src={close} width={18} height={18} alt="close" /></div>
-            <div><h1 style={{ marginTop: 0 }}></h1></div>
-            <div style={{ marginTop: 16, textAlign: "center" }}>Your share link has been created!</div>
-            <div style={{ marginTop: 16, textAlign: "center" }}>
+          <div className="confirmation-pane">
+            <div className="close-icon" onClick={() => { setShowConfirmation(false); setActiveRecords(['']); }}><Image src={close} width={18} height={18} alt="close" /></div>
+            <div><h1 className="mt-0"></h1></div>
+            <div className="p-div">Your share link has been created!</div>
+            <div className="p-div">
               <a style={{ color: theme.palette.primary.main }} href={`/social/${lastLink}`} target="_blank" rel="noreferrer">{typeof window  !== 'undefined' ? window.location.hostname : ""}{typeof window !== 'undefined' && window.location.port ? `:${window.location.port}` : ""}/social/{lastLink}</a>
             </div>
-            <div style={{ marginTop: 16, textAlign: "center" }}>
-              <Button variant="contained" style={{ width: "100%"  }} onClick={() => {
+            <div className="p-div">
+              <Button variant="contained" sx={{ width: "100%"  }} onClick={() => {
                 if (typeof window !== 'undefined') {
                   const text = `${window ? window.location.hostname : ""}${window && window.location.port ? `:${window.location.port}` : ""}/social/${lastLink}`
                   navigator.clipboard.writeText(text).then(() => {
@@ -233,6 +247,26 @@ export default function Share() {
           flex-direction: row;
           align-items: flex-start;
         }
+        .preview-pane {
+          position: relative;
+          width: 69vw;
+          height: 90vh;
+          padding: 10px;
+        }
+        .confirmation-pane {
+          position: relative; 
+          padding: 16px;
+        }
+        .txt-small {
+          font-size: 0.85rem;
+        }
+        .mt-0 {
+          margin-top: 0;
+        }
+        .p-div {
+          margin-top: 16px; 
+          text-align: center;
+        }
         .videos {
           width: calc(40vw - 4rem - 16px);
           margin-right: 2rem;
@@ -244,11 +278,30 @@ export default function Share() {
           width: calc(60vw - 2rem - 16px);
         }
         .viewer video {
-          height: calc(0.75 * (60vw - 2rem - 16px))
+          height: calc(0.75 * (60vw - 2rem - 16px));
+          width: 100%;
+          max-width: 100%;
+          border-radius: 6px;
         }
         .viewer-double video {
           width: calc(((60vw - 2rem - 16px) / 2) - 8px);
           height: calc(0.75 * (((60vw - 2rem - 16px) / 2) - 8px));
+          border-radius: 6px;
+        }
+        .toggle-buttons {
+          display: flex;
+          align-items: center; 
+          justify-content: space-between; 
+          padding-bottom: 16px;
+        }
+        .ml-2 {
+          margin-left: 16px;
+        }
+        .close-icon {
+          cursor: pointer;
+          position: absolute;
+          right: 10px;
+          top: 10px;
         }
       `}</style>
     </div>

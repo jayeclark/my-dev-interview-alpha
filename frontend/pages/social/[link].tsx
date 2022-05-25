@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from "react"
 import { useRouter } from "next/router";
-import styles from '../../styles/Home.module.css'
+import styles from '../../styles/Link.module.css'
 import axios from 'axios'
 import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
@@ -154,8 +154,8 @@ export default function Link() {
   
   return (
     <div>
-      <main className={styles.main} style={{ justifyContent: "flex-start" }}>
-        {loading ? <Skeleton variant="text" style={{ width: "calc(min(72vw, 72vh))", height: "37px", margin: "21px 0px" }}/> : showFeedback ? (<h1>Rate My Response</h1>) : (<h1>Sample Interview Answer</h1>)}
+      <main className={styles.main}>
+        {loading ? <Skeleton variant="text" sx={{ width: "calc(min(72vw, 72vh))", height: "37px", my: 3 }}/> : showFeedback ? (<h1>Rate My Response</h1>) : (<h1>Sample Interview Answer</h1>)}
         {loading == false ? ( 
           <>
         <section title="question" className={displayVideos.length == 2 ? "questions" : "question"}>
@@ -165,7 +165,7 @@ export default function Link() {
             </Card>
           )}
           {displayVideos.length == 2 && questions[0] !== questions[1] && (
-            <div style={{ display: "flex", height: "max-content" }}>
+                <div className={styles.questions}>
               <Card variant="outlined" sx={{ mb: theme.spacing(2), p: theme.spacing(3), display: 'flex', width: 'calc(50% - 8px)', mr: 2, maxHeight: "max-content", height: 'calc(max(fit-content, 100%))', minHeight: '55px', alignItems: 'center', justifyContent: 'center' }}>
                 <div><b>{questions[0]}</b></div>
               </Card>
@@ -179,19 +179,19 @@ export default function Link() {
           {displayVideos.length == 1 && (
             <>
               <section title="video" className="video">
-                  <video style={{ borderRadius: 6 }} src={displayVideos[0] ? `https://d1lt2f6ccu4rh4.cloudfront.net/${displayVideos[0].s3key}` : ''} controls />
+                  <video src={displayVideos[0] ? `https://d1lt2f6ccu4rh4.cloudfront.net/${displayVideos[0].s3key}` : ''} controls />
               </section>
             <section title="feedback" className="feedback">
               {!showFeedback && feedbackSent && (
-                <div style={{ padding: 48, textAlign: "center" }}>
+                <div className={styles.confirmation}>
                   Your feedback on this video has been recorded! 
                 </div>
               )}
               {showFeedback && (
                 <form onSubmit={(e) => handleSingleSubmit(e)}>
-                  <h3 style={{ textAlign: "center" }}>I&apos;d love your feedback! How well do I meet these criteria?</h3>
+                  <h3 className={styles.txtCtr}>I&apos;d love your feedback! How well do I meet these criteria?</h3>
                   <FeedbackSingle />
-                  <Button type="submit" size="large" style={{minWidth: "50%", margin: "16px 25% 0px 25%"}} variant="contained">Share Feedback</Button>
+                  <Button type="submit" size="large" sx={{minWidth: "50%", margin: "16px 25% 0px 25%"}} variant="contained">Share Feedback</Button>
                 </form>
               )}
               </section>
@@ -200,24 +200,24 @@ export default function Link() {
           {displayVideos.length > 1 && (
             <>
               <section title="videos" className="videos">
-                <div className="video-comp" style={{ marginRight: 16 }}>
-                  <video style={{ borderRadius: 6 }} src={displayVideos[0] ? `https://d1lt2f6ccu4rh4.cloudfront.net/${displayVideos[0].s3key}` : ''} controls />
+                <div className="video-comp mr-2">
+                  <video src={displayVideos[0] ? `https://d1lt2f6ccu4rh4.cloudfront.net/${displayVideos[0].s3key}` : ''} controls />
                 </div>
                 <div className="video-comp">
-                  <video style={{ borderRadius: 6 }} src={displayVideos[1] ? `https://d1lt2f6ccu4rh4.cloudfront.net/${displayVideos[1].s3key}` : ''} controls />
+                  <video src={displayVideos[1] ? `https://d1lt2f6ccu4rh4.cloudfront.net/${displayVideos[1].s3key}` : ''} controls />
                 </div>
               </section>
             <section title="feedback" className="feedback-double">
               {!showFeedback && feedbackSent && (
-                <div style={{ padding: 48, textAlign: "center" }}>
+                <div className={styles.confirmation}>
                   Your feedback on these videos has been recorded! 
                 </div>
               )}
               {showFeedback && (
                   <form onSubmit={(e) => handleDualSubmit(e)}>
-                    <h3 style={{ textAlign: "center" }}>I&apos;d love feedback on which video is better! How well does each one meet these criteria?</h3>
+                    <h3 className={styles.txtCtr}>I&apos;d love feedback on which video is better! How well does each one meet these criteria?</h3>
                     <FeedbackDouble />
-                    <Button type="submit" size="large" style={{minWidth: "50%", margin: "16px 25% 0px 25%"}} variant="contained">Share Feedback</Button>
+                    <Button type="submit" size="large" sx={{minWidth: "50%", margin: "16px 25% 0px 25%"}} variant="contained">Share Feedback</Button>
                   </form>
               )}
               </section>
@@ -274,7 +274,8 @@ export default function Link() {
           max-width: 1600px;
           height: calc(min(54vh, 54vw));
           min-height: calc(min(54vh, 54vw));
-          max-height: 1200px;          
+          max-height: 1200px;  
+          border-radius: 6px;        
         }
         .videos {
           display: flex;
@@ -301,6 +302,9 @@ export default function Link() {
           min-height: calc(min((33vh - 6px), (33vw - 6px)));
           max-height: 600px;
         }
+        .video-comp video {
+          border-radius: 6px;
+        }
         .buttons {
           display: flex!important:
           flex-wrap: nowrap;
@@ -319,6 +323,13 @@ export default function Link() {
           width: calc(min(72vh, 72vw));
           min-width: calc(min(72vh, 72vw));
           max-width: 1600px;
+        }
+        .mr-2 {
+          margin-right: 16px;
+        }
+        .feedback-btn {
+          min-width: 50%;
+          margin: 16px 25% 0px 25%;
         }
       `}</style>
     </div>

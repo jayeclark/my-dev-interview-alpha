@@ -13,7 +13,6 @@ export default function Videos({ id }: { id: number}) {
   const initialCatalog: Array<any> = [];
   const [catalog, setCatalog] = useState(initialCatalog);
   const [activeRecords, setActiveRecords] = useState(['']);
-  const [activeS3Keys, setActiveS3Keys] = useState(['']);
 
   const handleSetActiveRecords = (id: string) => {
     setActiveRecords([id]);
@@ -56,32 +55,44 @@ export default function Videos({ id }: { id: number}) {
   
     if (catalog.length == 0) {
       handleGetVideos(user.id).then((res) => {
-        const sorted = res.sort((a: any, b: any) => a.attributes.question.data.attributes.category - b.attributes.question.data.attributes.category);
-        const reduced = sorted.reduce((coll: any, item: any) => {
-          const index = coll.findIndex((x: any) => x.qid == item.attributes.question.data.id);
-          const videos = item.attributes.videos.data
-          const title = item.attributes.title
-          const question = item.attributes.question
-          if (index >= 0) {
-            coll[index].records.push(...videos.filter((x: any) => x.attributes.archive === false).map((x: any) => {
-              x.title = title;
-              x.question = question;
-              return x;
-            }))
-          } else {
-            coll.push({
-              qid: item.attributes.question.data.id,
-              question: item.attributes.question.data.attributes.question,
-              records: [...videos.filter((x: any) => x.attributes.archive === false).map((x: any) => {
-              x.title = title;
-              x.question = question;
-              return x;
-            })]
-            }) 
+        if (res.length > 0) {  
+          const sorted = res.sort((a: any, b: any) => {
+            const questionA = a.attributes.question
+            const questionB = b.attributes.question
+            if (questionB?.data.attributes.category < questionA?.data.attributes.category) {
+              return 1
+            }
+            if (questionB?.data.attributes.category > questionA?.data.attributes.category) {
+              return -1
+            }
+            return 0
+          });
+          const reduced = sorted.reduce((coll: any, item: any) => {
+            const index = coll.findIndex((x: any) => x.qid == item.attributes.question.data.id);
+            const videos = item.attributes.videos.data
+            const title = item.attributes.title
+            const question = item.attributes.question
+            if (index >= 0) {
+              coll[index].records.push(...videos.filter((x: any) => x.attributes.archive === false).map((x: any) => {
+                x.title = title;
+                x.question = question;
+                return x;
+              }))
+            } else {
+              coll.push({
+                qid: item.attributes.question.data.id,
+                question: item.attributes.question.data.attributes.question,
+                records: [...videos.filter((x: any) => x.attributes.archive === false).map((x: any) => {
+                x.title = title;
+                x.question = question;
+                return x;
+              })]
+              }) 
+            }
+            return coll;
+          }, [])
+          setCatalog(reduced);
           }
-          return coll;
-        }, [])
-        setCatalog(reduced);
       })
     }
 
@@ -110,7 +121,7 @@ export default function Videos({ id }: { id: number}) {
         </section>
         <section className="viewer">
           <h1>&nbsp;</h1>
-        <video style={{ width: '100%', maxWidth: '100%', borderRadius: 6 }} src={activeRecords[0] ? `https://d1lt2f6ccu4rh4.cloudfront.net/${getS3Key(activeRecords[0])}` : ''} controls autoPlay />
+          <video src={activeRecords[0] ? `https://d1lt2f6ccu4rh4.cloudfront.net/${getS3Key(activeRecords[0])}` : ''} controls autoPlay />
         </section>
       </main>
       <style jsx>{`
@@ -130,7 +141,10 @@ export default function Videos({ id }: { id: number}) {
           width: calc(60vw - 2rem - 16px);
         }
         .viewer video {
-          height: calc(0.75 * (60vw - 2rem - 16px))
+          height: calc(0.75 * (60vw - 2rem - 16px));
+          width: 100%;
+          max-width: 100%;
+          border-radius: 6px;
         }
       `}</style>
     </div>

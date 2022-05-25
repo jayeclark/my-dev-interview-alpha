@@ -124,19 +124,19 @@ function SignInForm({ showSignIn, setShowSignIn }: SignInFormProps) {
     <>
       <Dialog open={showSignIn}>
         <Box sx={{ p: 2 }}>
-          <div style={{ paddingBottom: 16, cursor: 'pointer', textAlign: 'right', fontWeight: '600' }} onClick={() => { setShowSignIn(false); }}>
+          <div className="close-icon" onClick={() => { setShowSignIn(false); }}>
             <Image src={Close} alt="close sign in dialog" />
           </div>
-          <Button variant="google" size="large" style={{ marginBottom: 16, width: "100%" }} onClick={() => { setSubmitError(""), redirectToGoogle() }}>
-            <Image height="24" width="24" src={Google} alt="Google Logo"/>
-            <span style={{ marginLeft: 8 }}>Sign in with Google</span>
+          <Button variant="google" size="large" sx={{ mb: 2, width: "100%" }} onClick={() => { setSubmitError(""), redirectToGoogle() }}>
+            <Image height="24" width="24" src={Google} alt="Google Logo"/>&nbsp;&nbsp;
+            <span>Sign in with Google</span>
           </Button>
-          <Button variant="github" size="large" style={{ marginBottom: 16, width: "100%" }} onClick={() => { setSubmitError(""), redirectToGitHub() }}>
-            <Image height="24" width="24" src={Github} alt="GitHub Logo" />
-            <span style={{ marginLeft: 8 }}>Sign in with GitHub</span>
+          <Button variant="github" size="large" sx={{ mb: 2, width: "100%" }} onClick={() => { setSubmitError(""), redirectToGitHub() }}>
+            <Image height="24" width="24" src={Github} alt="GitHub Logo" />&nbsp;&nbsp;
+            <span>Sign in with GitHub</span>
           </Button>
           <hr />
-          <form style={{ marginTop: 24 }} onSubmit={(e) => {
+          <form onSubmit={(e) => {
             e.preventDefault();
             if (signup) {
               const form = e.target as HTMLFormElement;
@@ -147,34 +147,91 @@ function SignInForm({ showSignIn, setShowSignIn }: SignInFormProps) {
             }
 
           }}>
-            <TextField id="email" type="text" label="Email" name="email" fullWidth sx={{ mb: 2 }} onChange={() => setSubmitError('')}/>
-            <div style={{ position: 'relative' }}>
-              <TextField id="password" type={showPassword ? "text" : "password"} label="Password" name="password" fullWidth  sx={{ mb: 2 }} onChange={() => setSubmitError('')}/>
-              <div style={{ position: 'absolute', top: 20, right: 16 }} onClick={() => setShowPassword(!showPassword)}>
-                <Image style={{ cursor: 'pointer', color: 'inherit' }} src={showPassword ? EyeFillSlash : EyeFill} alt={showPassword ? "Hide Password" : "Show Password"}/>
+            <TextField
+              id="email"
+              autoFocus
+              autoComplete="email"
+              type="text"
+              label="Email"
+              name="email"
+              fullWidth
+              sx={{ mb: 2 }}
+              onChange={() => setSubmitError('')}
+            />
+            <div className="relative">
+              <TextField
+                id="password"
+                autoComplete="password"
+                type={showPassword ? "text" : "password"}
+                label="Password"
+                name="password"
+                fullWidth
+                sx={{ mb: 2 }}
+                onChange={() => setSubmitError('')} />
+              <div className="show-pass" onClick={() => setShowPassword(!showPassword)}>
+                <Image src={showPassword ? EyeFillSlash : EyeFill} alt={showPassword ? "Hide Password" : "Show Password"}/>
               </div>
             </div>
             {signup && (
-              <div style={{ position: 'relative' }}>
-                <TextField id="password2" type={showConfirm ? "text" : "password"} label="Confirm Password" name="password2"  fullWidth sx={{ mb: 2 }} onChange={() => setSubmitError('')} />
-                <div style={{ position: 'absolute', top: 20, right: 16 }} onClick={() => setShowConfirm(!showConfirm)}>
-                  <Image style={{ cursor: 'pointer', color: 'inherit' }} src={showConfirm ? EyeFillSlash : EyeFill} alt={showPassword ? "Hide Password Confirmation" : "Show Password Confirmation"}/>
+              <div className="relative">
+                <TextField
+                  id="password2"
+                  autoComplete=""
+                  type={showConfirm ? "text" : "password"}
+                  label="Confirm Password"
+                  name="password2"
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  onChange={() => setSubmitError('')}
+                />
+                <div className="show-pass" onClick={() => setShowConfirm(!showConfirm)}>
+                  <Image src={showConfirm ? EyeFillSlash : EyeFill} alt={showPassword ? "Hide Password Confirmation" : "Show Password Confirmation"}/>
                 </div>
               </div>
             )}
-            <div style={{ fontSize: "0.75rem", marginTop: theme.spacing(-1), marginBottom: theme.spacing(1) }}><span style={{ color: "red" }}>{submitError ? submitError : "" }</span>&nbsp;</div>
-            <Button variant="contained" size="large" style={{ width: '100%'}} type="submit">
+            <div className="error-msg">{submitError ? submitError : "" }&nbsp;</div>
+            <Button variant="contained" size="large" sx={{ width: '100%', mb: 2 }} type="submit">
               {signup ? "Sign Up with Email" : "Sign In with Email"}
             </Button>
             {!signup && (
-              <div style={{ paddingTop: 16 }}>Need an account? <span onClick={() => setSignup(true)} style={{ color: theme.palette.primary.main, cursor: 'pointer' }}>Register here</span></div>
+              <div>Need an account? <span onClick={() => setSignup(true)} className="link-style">Register here</span></div>
             )}
             {signup && (
-              <div style={{ paddingTop: 16 }}>Already have an account? <span onClick={() => setSignup(false)} style={{ color: theme.palette.primary.main, cursor: 'pointer' }}>Sign in here</span></div>
+              <div>Already have an account? <span onClick={() => setSignup(false)} className="link-style">Sign in here</span></div>
             )}
             </form>
         </Box>
       </Dialog>
+      <style jsx>{`
+      form {
+        margin-top: 24px;
+      }
+      .close-icon {
+        padding-bottom: 16px;
+        cursor: pointer;
+        text-align: right;
+      }
+      .relative {
+        position: relative;
+      }
+      .show-pass {
+        position: absolute; 
+        top: 20px;
+        right: 16px;
+        cursor: pointer; 
+        opacity: 0.5;
+      }
+      .error-msg {
+        color: red;
+        font-size: 0.75rem;
+        margin-top: ${theme.spacing(-1)};
+        margin-bottom: ${theme.spacing(1)};
+      }
+      .link-style {
+        color: ${theme.palette.primary.main};
+        cursor: pointer;
+      }
+      `}</style>
     </>
   )
 }

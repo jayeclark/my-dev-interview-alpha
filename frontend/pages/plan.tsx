@@ -235,10 +235,11 @@ export default function Plans({ id }: { id: number}) {
       <>
       {searchResults.map((q: any) => (
         <Card sx={{ p: 1, mb: 2 }} key={q.qid}>
-            <div style={{ padding: "8px", display: "flex", flexWrap: "nowrap", alignItems: "center" }}><div><b>{q.attributes.question}</b>&nbsp;&nbsp;&nbsp;</div>
-            </div>
-          <div style={{ padding: "8px", display: "flex", flexWrap: "nowrap", alignItems: "center" }}>
-            <abbr style={{ marginTop: 4, cursor: "pointer" }} title="Add New Answer" onClick={() => createNewAnswer(q.id, q.attributes.question)}>
+          <div className="row">
+            <div><b>{q.attributes.question}</b>&nbsp;&nbsp;&nbsp;</div>
+          </div>
+          <div className="row">
+            <abbr className="icon" title="Add New Answer" onClick={() => createNewAnswer(q.id, q.attributes.question)}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
                 <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
@@ -246,6 +247,18 @@ export default function Plans({ id }: { id: number}) {
             </abbr>
             <div>&nbsp;&nbsp;&nbsp;Plan an answer to this question</div>
           </div>
+          <style jsx>{`
+            .row {
+              padding: 8px;
+              display: flex;
+              flex-wrap: nowrap; 
+              align-items: center;
+            }
+            .icon {
+              margin-top: 4px;
+              cursor: pointer;
+            }
+          `}</style>
         </Card>
       ))}
       </>
@@ -280,6 +293,9 @@ export default function Plans({ id }: { id: number}) {
     }
   }
 
+  const titleEditStyle = { flexGrow: 1, width: "100%", backgroundColor: theme.palette.background.paper,}
+
+  const mdEditorStyle = { height: "auto", width: "100%" };
 
   return (
     <div className={styles.container}>
@@ -298,9 +314,9 @@ export default function Plans({ id }: { id: number}) {
               name="search"
               label="Search for a question"
               onChange={(e) => { setSearchFor(e.target.value); if (searched) { setSearched(false) } }}
-              style={{ backgroundColor: theme.palette.background.paper,  width: "100%", marginBottom: 16 }}
+              sx={{ background: theme.palette.background.paper,  width: "100%", mb: 2 }}
             />
-            <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
+            <div className="search-button">
               <Button sx={{ mr: 2, mb: 2 }} type="reset" variant="outlined" onClick={() => {
                 setSearchResults([]);
                 setSearchFor("");
@@ -340,50 +356,50 @@ export default function Plans({ id }: { id: number}) {
                 title={currentPlan.attributes.title}
                 answerId={currentPlan.id}
                 />
-                <Button style={{ marginTop: 48 }} type="button" onClick={() => setPlanMode('edit')}>Cancel Recording</Button>
+                <Button sx={{ mt: 6 }} type="button" onClick={() => setPlanMode('edit')}>Cancel Recording</Button>
             </>
           )}
             {planMode !== 'record' && (
               <>
-                <h3 style={{ marginBottom: 0 }}>
+                <h3 className="mb-0">
                   Story Title&nbsp;&nbsp;
-                  {editTitle === false && (
-                    <svg style={{ cursor: 'pointer' }} onClick={() => setEditTitle(true)} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  {editTitle == false && (
+                    <svg className="clickable" onClick={() => setEditTitle(true)} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
                   </svg>
                   )}
                 </h3>
                 {editTitle == false && (
-                  <p style={{ marginBottom: 32 }}>{currentPlan.attributes.title}</p>
+                  <p className="mb-4">{currentPlan.attributes.title}</p>
                 )}
                 {editTitle && (
-                  <form onSubmit={(e: any) => handleUpdate(e, { title: e.target.title.value })} style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end", width: "100%", margin: "8px 0px" }}>
+                  <form className="title" onSubmit={(e: any) => handleUpdate(e, { title: e.target.title.value })}>
                     <TextField
                       name="title"
-                      style={{ flexGrow: 1, width: "100%", backgroundColor: theme.palette.background.paper,}}
+                      style={titleEditStyle}
                       defaultValue={currentPlan.attributes.title}
                     />
                     <Button sx={{ mt: 1 }} onClick={() => setEditTitle(false)} type="button" variant="outlined">Cancel</Button>
                     <Button sx={{ mt: 1, ml: 1 }} type="submit" variant="contained">Save</Button>
                   </form>
                 )}
-                <h3 style={{ marginBottom: 8 }}>Narrative&nbsp;&nbsp;
+                <h3 className="mb-1">Narrative&nbsp;&nbsp;
                   {editPlan === false && (
-                    <svg style={{ cursor: 'pointer' }} onClick={() => setEditPlan(true)} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <svg className="clickable" onClick={() => setEditPlan(true)} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
                   </svg>
                   )}
                 </h3>
-                <div style={{ marginBottom: 32 }}>
+                <div className="mb-4">
                   {editPlan === false && currentPlan.attributes.planned_answer && (
                     <Markdown>{currentPlan.attributes.planned_answer}</Markdown>
                   )}
                 {editPlan && (
-                  <form onSubmit={(e: any) => handleUpdate(e, { planned_answer: e.target.planned_answer.value })} style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end", width: "100%" }}>
+                  <form onSubmit={(e: any) => handleUpdate(e, { planned_answer: e.target.planned_answer.value })} className="md-editor">
                     <MdEditor
                       name="planned_answer"
                       defaultValue={currentPlan.attributes.planned_answer || ""}
-                      style={{ height: "auto", width: "100%" }}
+                      style={mdEditorStyle}
                       renderHTML={(text) => <ReactMarkdown>{text || ""}</ReactMarkdown>}
                     />
                     <Button sx={{ mt: 1 }} onClick={() => setEditPlan(false)} type="button" variant="outlined">Cancel</Button>
@@ -393,23 +409,23 @@ export default function Plans({ id }: { id: number}) {
                 </div>
               </>
             )}
-            <h3 style={{ marginBottom: 8 }}>Prompts&nbsp;&nbsp;
+            <h3 className="mb-1">Prompts&nbsp;&nbsp;
               {editPrompts === false && (
-                <svg style={{ cursor: 'pointer' }} onClick={() => setEditPrompts(true)} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <svg className="clickable" onClick={() => setEditPrompts(true)} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
               </svg>
               )}
             </h3>
-            <div style={{ marginBottom: 32 }}>
+            <div className="mb-4">
               {editPrompts === false && currentPlan.attributes.prompts && (
                 <Markdown>{currentPlan.attributes.prompts}</Markdown>
               )}
               {editPrompts && (
-                <form onSubmit={(e: any) => handleUpdate(e, { prompts: e.target.prompts.value })} style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end", width: "100%" }}>
+                <form onSubmit={(e: any) => handleUpdate(e, { prompts: e.target.prompts.value })} className="md-editor">
                   <MdEditor
                     name="prompts"
                     defaultValue={currentPlan.attributes.prompts || ""}
-                    style={{ height: "auto", width: "100%" }}
+                    style={mdEditorStyle}
                     renderHTML={(text) => <ReactMarkdown>{text || ""}</ReactMarkdown>}
                   />
                   <Button sx={{ mt: 1 }} onClick={() => setEditPrompts(false)} type="button" variant="outlined">Cancel</Button>
@@ -438,6 +454,36 @@ export default function Plans({ id }: { id: number}) {
         }
         .viewer video {
           height: calc(0.75 * (60vw - 2rem - 16px))
+        }
+        .search-button {
+          display: flex;
+          justify-content: flex-end;
+          width: 100%;
+        }
+        .mb-0 {
+          margin-bottom: 0;
+        }
+        .mb-1 {
+          margin-bottom: 8px;
+        }
+        .clickable {
+          cursor: pointer;
+        }
+        mb-4 {
+          margin-bottom: 32px;
+        }
+        .title {
+          display: flex; 
+          flex-wrap: wrap; 
+          justify-content: flex-end; 
+          width: 100%; 
+          margin: 8px 0px;
+        }
+        .md-editor {
+          display: flex;
+          flex-wrap: wrap; 
+          justify-content: flex-end; 
+          width: 100%; 
         }
       `}</style>
     </div>

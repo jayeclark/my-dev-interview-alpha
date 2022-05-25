@@ -1,6 +1,21 @@
 import Slider from '@mui/material/Slider'
 
+const customMarks = [
+                      { value: 0, label: "Not at all" },
+                      { value: 1, label: "" },
+                      { value: 2, label: "" },
+                      { value: 3, label: "" },
+                      { value: 4, label: "" },
+                      { value: 5, label: "Somewhat" },
+                      { value: 6, label: "" },
+                      { value: 7, label: "" },
+                      { value: 8, label: "" },
+                      { value: 9, label: "" },
+                      { value: 10, label: "Very much" },
+                    ]
+
 function CustomSlider({ name, label }: { name: string; label: string }) {
+
   return (
     <div className="feedback-row">
             <Slider 
@@ -10,22 +25,10 @@ function CustomSlider({ name, label }: { name: string; label: string }) {
         defaultValue={5}
         step={1}
         valueLabelDisplay="off"
-        style={{ minWidth: "calc(40% - 60px)", margin: "0px 60px 32px 0px", fontSize: "0.8rem" }}
-        marks={[
-          { value: 0, label: "Not at all" },
-          { value: 1, label: "" },
-          { value: 2, label: "" },
-          { value: 3, label: "" },
-          { value: 4, label: "" },
-          { value: 5, label: "Somewhat" },
-          { value: 6, label: "" },
-          { value: 7, label: "" },
-          { value: 8, label: "" },
-          { value: 9, label: "" },
-          { value: 10, label: "Very much" }
-        ]}
+        className="feedback-video-column left"
+        marks={customMarks}
       />
-      <div style={{ minWidth: "20%", textAlign: "center" }}><b>{label}</b></div>
+      <div className='feedback-row-label'><b>{label}</b></div>
       <Slider 
         min={0}
         max={10}
@@ -33,20 +36,8 @@ function CustomSlider({ name, label }: { name: string; label: string }) {
         defaultValue={5}
         step={1}
         valueLabelDisplay="off"
-        style={{ minWidth: "calc(40% - 60px)", margin: "0px 0px 32px 60px", fontSize: "0.8rem" }}
-        marks={[
-          { value: 0, label: "Not at all" },
-          { value: 1, label: "" },
-          { value: 2, label: "" },
-          { value: 3, label: "" },
-          { value: 4, label: "" },
-          { value: 5, label: "Somewhat" },
-          { value: 6, label: "" },
-          { value: 7, label: "" },
-          { value: 8, label: "" },
-          { value: 9, label: "" },
-          { value: 10, label: "Very much" }
-        ]}
+        className="feedback-video-column right"
+        marks={customMarks}
         
       />
       <style jsx>{`
@@ -59,6 +50,21 @@ function CustomSlider({ name, label }: { name: string; label: string }) {
         padding: 8px 40px;
         border-top: 1px solid rgb(233, 232, 229)
       }
+      .feedback-row-label {
+        min-width: 20%; 
+        text-align: center;
+      }
+      .feedback-video-column {
+        min-width: calc(40% - 60px);
+        font-size: 0.8rem;
+        margin-bottom: 32px;
+      }
+      .feedback-video.column.left {
+        margin-right: 60px
+      }
+      .feedback-video.column.right {
+        margin-left: 60px
+      }
     `}</style>
     </div>
 
@@ -66,17 +72,19 @@ function CustomSlider({ name, label }: { name: string; label: string }) {
 }
 
 export default function FeedbackDouble() {
+  const videoLabelStyle = {
 
+  }
   return (
     <div>
       <div className="title-row">
-        <div style={{ textAlign: "center", width: "calc(40% - 60px)", marginRight: "60px", fontWeight: 500 }}>
+        <div className="title-video-column left">
           Video A
         </div>
-        <div style={{ textAlign: "center", width: "20%"}}>
+        <div  className="title-row-label">
 
         </div>
-        <div style={{ textAlign: "center", width: "calc(40% - 60px)", marginLeft: "60px", fontWeight: 500 }}>
+        <div className="title-video-column right">
           Video B
         </div>
       </div>
@@ -96,6 +104,22 @@ export default function FeedbackDouble() {
           align-items: center;
           flex-wrap: nowrap;
           padding: 8px 40px;
+        }
+        .title-video-column {
+          min-width: calc(40% - 60px);
+          text-align: center;
+          font-size: 0.8rem;
+          font-weight: 500;
+        }
+        .title-video-column.right {
+          margin-left: 60px;
+        }
+        .title-video-column.left {
+          margin-right: 60px;
+        }
+        .title-row-label {
+          min-width: 20%; 
+          text-align: center;
         }
       `}</style>
     </div>

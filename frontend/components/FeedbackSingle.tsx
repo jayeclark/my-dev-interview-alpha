@@ -3,7 +3,7 @@ import Slider from '@mui/material/Slider'
 function CustomSlider({ name, label }: { name: string; label: string }) {
   return (
     <div className="feedback-row">
-      <div style={{ minWidth: "20%" }}><b>{label}</b></div>
+      <div className="feedback-row-label"><b>{label}</b></div>
       <Slider 
         min={0}
         max={10}
@@ -11,7 +11,7 @@ function CustomSlider({ name, label }: { name: string; label: string }) {
         defaultValue={5}
         step={1}
         valueLabelDisplay="off"
-        style={{ minWidth: "calc(80% - 80px)", margin: "0px 0px 32px 80px", fontSize: "0.8rem" }}
+        className="feedback-row-slider"
         marks={[
           { value: 0, label: "Not at all" },
           { value: 1, label: "" },
@@ -37,6 +37,14 @@ function CustomSlider({ name, label }: { name: string; label: string }) {
         padding: 8px 0px;
         padding-right: 40px;
         border-top: 1px solid rgb(233, 232, 229)
+      }
+      .feedback-row-label {
+        min-width: 20%;
+      }
+      .feedback-row-slider {
+        min-width: calc(80% - 80px);
+        margin: 0px 0px 32px 80px;
+        font-size: 0.8rem;
       }
     `}</style>
     </div>

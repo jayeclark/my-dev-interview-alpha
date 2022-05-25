@@ -121,6 +121,8 @@ function Questions({ catalog, setCatalog, style, activeRecords, setActiveRecords
     })
   }
 
+  const filterInputStyle = { backgroundColor: theme.palette.background.paper,  width: "100%", marginBottom: 16 }
+
   return (
     <>
       <TextField 
@@ -128,7 +130,7 @@ function Questions({ catalog, setCatalog, style, activeRecords, setActiveRecords
           id="filter" 
           name="filter"
           label="Filter by question or video title"
-          style={{ backgroundColor: theme.palette.background.paper,  width: "100%", marginBottom: 16 }}
+          sx={{ background: theme.palette.background.paper, width: '100%', mb: 2 }}
         />
       {catalog.filter((q: any) => {
         const question = q.question as string; 
@@ -137,7 +139,7 @@ function Questions({ catalog, setCatalog, style, activeRecords, setActiveRecords
       })
         .map((q: any) => (
         <Card sx={{ p: 1, mb: 2 }} key={q.qid}>
-          <div style={{ padding: "8px" }}><b>{q.question}</b></div>
+          <div className="question"><b>{q.question}</b></div>
             {style == 'videos' && (
               <Videos
                 allRecords={q.records}
@@ -173,18 +175,26 @@ function Questions({ catalog, setCatalog, style, activeRecords, setActiveRecords
         ))}
       <Dialog open={showModal}>
         <Card sx={{ p: 4 }}>
-          <div style={{ marginBottom: 24 }}>Are you sure you want to {modalMode} this {style == "videos" ? "video" : "answer plan"}?</div>
+          <div className="delete-confirm">Are you sure you want to {modalMode} this {style == "videos" ? "video" : "answer plan"}?</div>
           <div>
-            <Button style={{ width: 'calc(50% - 4px', marginRight: 8 }} variant="outlined" onClick={() => {
+            <Button sx={{ width: 'calc(50% - 4px)', mr: 1 }} variant="outlined" onClick={() => {
               setCurrentModalID(-1);
               setCurrentS3Key("");
               setShowModal(false);
             }}>Cancel</Button>
-            {style == "videos" && <Button style={{ width: 'calc(50% - 4px' }} variant="contained" onClick={() => modalMode == "archive" ? handleArchiveVideo() : handleDeleteVideo()}>{modalMode === "archive" ? "Archive" : "Delete"}</Button>}
-            {style == "videos" && <Button style={{ width: 'calc(50% - 4px' }} variant="contained" onClick={() => modalMode == "archive" ? handleArchivePlan() : handleDeletePlan()}>{modalMode === "archive" ? "Archive" : "Delete"}</Button>}
+            {style == "videos" && <Button sx={{ width: 'calc(50% - 4px)' }} variant="contained" onClick={() => modalMode == "archive" ? handleArchiveVideo() : handleDeleteVideo()}>{modalMode === "archive" ? "Archive" : "Delete"}</Button>}
+            {style == "plans" && <Button sx={{ width: 'calc(50% - 4px)' }} variant="contained" onClick={() => modalMode == "archive" ? handleArchivePlan() : handleDeletePlan()}>{modalMode === "archive" ? "Archive" : "Delete"}</Button>}
           </div>
         </Card>
       </Dialog>
+      <style jsx>{`
+        .question {
+          padding: 8px;
+        }
+        .delete-confirm {
+          margin-bottom: 24px;
+        }
+      `}</style>
       </>
     )
   }

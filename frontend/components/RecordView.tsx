@@ -24,7 +24,7 @@ const VideoPreview = ({ stream }: { stream: MediaStream | null }) => {
   return (<>
           <div id="video-container" className="video-container">
             Loading, please wait...
-            <video style={{ position: 'absolute', top: 0, left: 0, opacity: loading ? 0 : 1, transition: 'opacity 1.5s ease' }} ref={videoRef} autoPlay />
+            <video ref={videoRef} autoPlay />
           </div>
           <style jsx>{`
             .video-container {
@@ -42,6 +42,11 @@ const VideoPreview = ({ stream }: { stream: MediaStream | null }) => {
               width: 100%;
               max-width: 100%;
               max-height: 100%;
+              position: absolute;
+              top: 0; 
+              left: 0;
+              opacity: ${loading ? 0 : 1}
+              transition: opacity 1.5s ease;
             }
           `}</style>
           </>);
@@ -161,29 +166,44 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
     setShowPreview(!showPreview);
   }
 
+  const imageStyle = {
+    maxWidth: "calc(min(60vh, 60vw))",
+    maxHeight: "calc(min(60vh, 60vw))",
+    overflow: "hidden"
+  }
+
+  const cardStyle = {
+    width: 'calc(100% - 32px)',
+    padding: 24,
+    marginBottom: 8,
+    backgroundColor: "white",
+    borderRadius: "6px",
+    fontWeight: 500
+  }
+
   return (
     <>
       <section id="record-answer" className="answer-container">
         <div className="video-screen">
           {recording && showPreview && (<VideoPreview stream={previewStream} />)}
-          {recording && !showPreview && (<div style={{ backgroundColor: "#000", height: "calc(min(54vh, 54vw))", width: "calc(min(54vh, 54vw))", maxWidth: "calc(min(54vh, 54vw))", overflow: "hidden", margin: "0px auto" }} ><Image layout="responsive" width={400} height={400} style={{ maxWidth: "calc(min(60vh, 60vw))", maxHeight: "calc(min(60vh, 60vw))", overflow: "hidden" }} alt="fake person" src="https://fakeface.rest/face/view?minimum_age=24&maximum_age=50" /></div>)}
+          {recording && !showPreview && (<div className="fake-person"><Image layout="responsive" width={400} height={400} style={imageStyle} alt="fake person" src="https://fakeface.rest/face/view?minimum_age=24&maximum_age=50" /></div>)}
           {!recording && (<video ref={activeVideoPlayer} src={mediaBlobUrl || ''} controls autoPlay={playing ? true : false} />)}
-          <div className="overlay" style={{ visibility: !playing && !recording ? "visible" : "hidden", backdropFilter: !playing && !recording ? 'blur(20px)' : '' }}>
+          <div className={!playing && !recording ? "overlay" : "overlay-hidden"} >
           { !recording && (
             <>
             {hasRecorded && hasSaved && (<>
-                  <Card variant="outlined" style={{ width: 'calc(100% - 32px)', textAlign: 'center', padding: 24, marginBottom: 8, backgroundColor: "white", borderRadius: "6px", fontWeight: 500}}>
+                  <Card variant="outlined" style={cardStyle}>
                     <Image width={20} height={20} src={cloudCheck} alt="checkmark" style={{ transform: 'translateY(3px)'}} />&nbsp;&nbsp;Your video has been saved!
-                  </Card><div style={{ width: '100%' }}></div>
+                  </Card><div className="flex-line-break"></div>
                   {handleNextQuestion && (
                     <Button sx={{...buttonStyle}} size="large" variant="contained" onClick={handleNextQuestion}><b>Next Question</b></Button>
                   )}
-                  <div style={{width: '100%'}}></div>
+                  <div className="flex-line-break"></div>
                 </>)}
             {hasRecorded && !hasSaved && (
               <>
                 <Button sx={{...buttonStyle}} size="large" variant="contained" onClick={handleWatch}><b>Watch your answer</b></Button>
-                <div style={{width: '100%'}}></div>
+                <div className="flex-line-break"></div>
               </>
             )}
             {hasRecorded && (
@@ -220,7 +240,7 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
             <Card>
               <CardContent>
                 <h1>Save This Recording</h1>
-                <span style={{ fontSize: '0.85rem' }}>
+                <span className="txt-small">
                   Save this recording to review in the future, or include in a video resume.
                 </span>
               <form onSubmit={(e) => { e.preventDefault(); handleSave(e) }}>
@@ -229,7 +249,7 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
                       id="title" 
                       name="title"
                       label="(Optional) Add a brief descriptive title"
-                      style={{ width: "100%", marginTop: 32, marginBottom: 16 }}
+                      sx={{ width: "100%", mt: 4, mb: 2 }}
                     />
                   )}
                   <label htmlFor="rating">Rate your performance (0 - 5 stars)</label>
@@ -240,7 +260,7 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
                     defaultValue={6}
                     step={1}
                     valueLabelDisplay="off"
-                    style={{ marginBottom: 48 }}
+                    sx={{ mb: 6 }}
                     marks={[
                       { value: 0, label: "0" },
                       { value: 1, label: "" },
@@ -255,7 +275,7 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
                       { value: 10, label: "5" }
                     ]}
                   />
-                   <div style={{ textAlign: 'right' }}>
+                   <div className="txt-right">
                     <Button style={{ marginLeft: 'auto' }}  onClick={() => setShowSave(false)} disabled={saving}>Cancel</Button>
                     <Button type="submit" variant="contained" disabled={saving}>{saving ? "Saving - Please Wait" : "Save Answer"}</Button>
                   </div>
@@ -273,7 +293,17 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
         .answer-container {
           position: relative;
         }
-
+        .fake-person {
+          background-color: #000; 
+          height: calc(min(54vh, 54vw)); 
+          width: calc(min(54vh, 54vw));
+          max-width: calc(min(54vh, 54vw));
+          overflow: hidden; 
+          margin: 0px auto;
+        }
+        .flex-line-break {
+          width: 100%;
+        }
         .video-screen {
           width: calc(min(72vh, 72vw));
           height: calc(min(54vh, 54vw));
@@ -292,7 +322,8 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
           border-radius: 6px;
         }
         
-        .overlay {
+        .overlay,
+        .overlay-hidden {
            opacity: 0.95;
            background-color: transparent;
            width: 100%;
@@ -306,13 +337,24 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
            justify-content: center;
            align-content: center;
         }
-
+        .overlay {
+          visibility: visible;
+          backdropFilter: blur(20px);
+        }
+        .overlay-hidden {
+          visibility: hidden;
+        }
         .record-button-watching {
           position: absolute!important;
           top: 16px;
           right: 16px;
         }
-
+        .txt-right {
+          text-align: right;
+        }
+        .txt-small {
+          font-size: 0.85rem;
+        }
         .stop-button {
           position: absolute!important;
           top: 16px;

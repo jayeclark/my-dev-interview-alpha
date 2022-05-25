@@ -5,6 +5,7 @@ import { useTheme } from "@mui/material";
 import { Box } from "@mui/material";
 import { UserContext } from "../scripts/context";
 import NavBar from "./NavBar";
+import Footer from "./Footer";
 
 const Layout = (props: any) => {
   const theme = useTheme();
@@ -44,7 +45,13 @@ const Layout = (props: any) => {
       <UserContext.Provider value={{ handleSetUser, user }}>
         <Box sx={{ background: theme.palette.background.default }}>
         <header>
-          <style jsx>
+          <NavBar />
+        </header>
+        <div className="padded-top">{props.children}</div>
+        <Footer />
+        </Box>
+      </UserContext.Provider>
+      <style jsx>
             {`
               body {
                 background-color: ${theme.palette.common.black}
@@ -54,25 +61,11 @@ const Layout = (props: any) => {
                 color: #000;
                 padding-top: 11px;
               }
-              .navbar-brand {
-                justify-self: left;
+              .padded-top {
+                padding-top: 57px;
               }
             `}
-          </style>
-          <NavBar />
-        </header>
-        <div style={{ paddingTop: "57px" }}>{props.children}</div>
-        <footer style={{ fontSize: "0.8rem", color: "rgb(0,0,0,0.6)", backgroundColor: theme.palette.background.default, display: "flex", flex: 1, padding: "1rem 0", borderTop: "1px solid #eaeaea", justifyContent: "center", alignItems: "center" }}>
-          <div><a
-            href="https://github.com/jayeclark"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            &copy; 2022 Jay Clark
-          </a> | Terms &amp; Conditions | Privacy</div>
-        </footer>
-        </Box>
-      </UserContext.Provider>
+        </style>
     </>
   );
 };
