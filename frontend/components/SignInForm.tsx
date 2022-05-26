@@ -20,14 +20,19 @@ import { UserContext } from "../scripts/context"
 interface SignInFormProps {
   showSignIn: boolean;
   setShowSignIn: Function;
+  signUpMode?: boolean;
 }
 
-function SignInForm({ showSignIn, setShowSignIn }: SignInFormProps) {
+function SignInForm({ showSignIn, setShowSignIn, signUpMode }: SignInFormProps) {
   const { handleSetUser, user } = useContext(UserContext);
   const router = useRouter();
   const theme = useTheme();
 
-  const [ signup, setSignup ] = useState(false);
+  if (typeof signUpMode == "undefined") {
+    signUpMode = false;
+  }
+
+  const [ signup, setSignup ] = useState(signUpMode);
   const [ showPassword, setShowPassword ] = useState(false);
   const [ showConfirm, setShowConfirm ] = useState(false);
   const [showGoogle, setShowGoogle] = useState(false);

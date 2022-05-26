@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-page-custom-font */
 import { useState } from "react";
+import { useRouter } from "next/router"
 import Head from "next/head";
 import { useTheme } from "@mui/material";
 import { Box } from "@mui/material";
@@ -9,6 +10,8 @@ import Footer from "./Footer";
 
 const Layout = (props: any) => {
   const theme = useTheme();
+  const router = useRouter();
+  const activePage = router.pathname;
 
   const [user, setuser] = useState({ username: '', id: '', email: '', jwt: '' })
 
@@ -45,7 +48,7 @@ const Layout = (props: any) => {
       <UserContext.Provider value={{ handleSetUser, user }}>
         <Box sx={{ background: theme.palette.background.default }}>
         <header>
-          <NavBar />
+          <NavBar currentActivePage={activePage} />
         </header>
         <div className="padded-top">{props.children}</div>
         <Footer />

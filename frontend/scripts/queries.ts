@@ -114,6 +114,7 @@ query getPlans($id: Long) {
         title
         planned_answer
         prompts
+        user_id
         datetime_planned
         question {
           data {

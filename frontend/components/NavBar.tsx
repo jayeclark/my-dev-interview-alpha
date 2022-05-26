@@ -9,16 +9,17 @@ import mdi from "../assets/mdi.png"
 import profile from "../assets/profile_small.jpg"
 import practice from "../assets/camera-video-fill.svg"
 import review from "../assets/video.svg"
+import home from "../assets/house-fill.svg"
 import plan from "../assets/list-check.svg"
 import share from "../assets/share-fill.svg"
 import down from "../assets/caret-down-fill.svg"
 
-function NavBar() {
+function NavBar({ currentActivePage }: {currentActivePage: string}) {
   const theme = useTheme();
   const router = useRouter();
   const { handleSetUser, user } = useContext(UserContext);
   const [showSignIn, setShowSignIn] = useState(false);
-  const [activePage, setActivePage] = useState(router.pathname)
+  const [activePage, setActivePage] = useState(currentActivePage)
 
   const handleSetShowSignIn = (visible: boolean) => {
     setShowSignIn(visible);
@@ -40,8 +41,18 @@ function NavBar() {
           <Image height="41" width="64" alt="logo" src={mdi} />
         </div>
         <div className="menu-options">
+        <div className={router.pathname  == "/" ? "nav-item-active" : "nav-item"} onClick={() => setActivePage("/")}>
+          <Link href="/" passHref>
+            <div className="nav-link">
+              <div className="option-icon"> 
+                <Image width="22" height="22" src={home} alt="home" />
+              </div>
+              <div className="option-label">Home</div>
+            </div>
+          </Link>
+        </div>
         {user.jwt !== '' && (
-            <div className={activePage == "/plan" ? "nav-item-active" : "nav-item"} onClick={() => setActivePage("/plan")}>
+            <div className={router.pathname == "/plan" ? "nav-item-active" : "nav-item"} onClick={() => setActivePage("/plan")}>
             <Link href="/plan" passHref>
                 <div className="nav-link">
                   <div className="option-icon" >
@@ -51,8 +62,8 @@ function NavBar() {
               </div>
             </Link>
           </div>)}
-          <div className={activePage == "/" ? "nav-item-active" : "nav-item"} onClick={() => setActivePage("/")}>
-            <Link href="/" passHref>
+          <div className={router.pathname  == "/practice" ? "nav-item-active" : "nav-item"} onClick={() => setActivePage("/practice")}>
+            <Link href="/practice" passHref>
               <div className="nav-link">
                 <div className="option-icon"> 
                   <Image width="24" height="24" className="practice-img" src={practice} alt="practice" />
@@ -62,7 +73,7 @@ function NavBar() {
             </Link>
           </div>
           {user.jwt !== '' && (
-            <div className={activePage == "/review" ? "nav-item-active" : "nav-item"} onClick={() => setActivePage("/review")}>
+            <div className={router.pathname  == "/review" ? "nav-item-active" : "nav-item"} onClick={() => setActivePage("/review")}>
               <Link href="/review" passHref>
                 <div className="nav-link">
                     <Image width="18" height="18" src={review} alt="review" />
@@ -71,7 +82,7 @@ function NavBar() {
               </Link>
             </div>)}
           {user.jwt !== '' && (
-            <div className={activePage == "/share" ? "nav-item-active" : "nav-item"} onClick={() => setActivePage("/share")}>
+            <div className={router.pathname  == "/share" ? "nav-item-active" : "nav-item"} onClick={() => setActivePage("/share")}>
               <Link href="/share" passHref>
                 <div className="nav-link">
                   <Image width="18" height="18" src={share} alt="share" />
@@ -175,7 +186,7 @@ function NavBar() {
           font-size: 0.8rem;
           margin-left: 24px;
           opacity: 1;
-          height: 100%;
+          height: calc(100% + 2px);
         }
         .nav-item {
           cursor: pointer;

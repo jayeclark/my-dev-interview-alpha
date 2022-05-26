@@ -96,7 +96,7 @@ export default function Plans({ id }: { id: number}) {
 
     if (user.jwt) {
       handleGetPlans(user.id).then((res) => {
-        const sorted = res.sort((a: any, b: any) => a.attributes.question.data.attributes.category - b.attributes.question.data.attributes.category);
+        const sorted = res.sort((a: any, b: any) => a.attributes.question?.data.attributes.category - b.attributes.question?.data.attributes.category);
         const reduced = sorted.reduce((coll: any, item: any) => {
           const index = coll.findIndex((x: any) => x.qid == item.attributes.question.data.id);
           if (index >= 0 && item.attributes.datetime_planned > 0) {
