@@ -31,20 +31,22 @@ export default function LandingPage() {
   return (
     <>
       <div className="hero">
-        <Image src={hero} alt="video interview" />
+        <div className="hero-img">
+          <Image width="600" height="400" layout="responsive" src={hero} alt="video interview" />
+        </div>
         <div className="landing">
           
         </div>
         <div className="cta">
-          <h1>Ace the virtual tech interview</h1>
-          <p>Plan, practice and receive feedback on your video answers to behavioral and technical interview questions from top employers.</p>
+          <h1>Ace the virtual interview</h1>
+          <p className="cta-details">Plan, practice and get feedback on your answers to video interview questions.</p>
           <div>
-            <Button variant="contained" color="info" sx={{ mr: 2 }} onClick={() => setShowSignIn(true)}>Get Started</Button><Button onClick={() => router.push("/practice")} variant="outlined" color="info" >Try it Out</Button>
+            <Button variant="contained" color="info" sx={{ mr: 2, borderRadius: "50px" }} onClick={() => setShowSignIn(true)}>Get Started</Button><Button onClick={() => router.push("/practice")} variant="outlined" color="info" sx={{  borderRadius: "50px" }}>Try it Out</Button>
           </div>
         </div>
       </div>
       <div>
-        <h1 className="steps-title">How MyDevInterview Works</h1>
+        <h1 className="steps-title">How <span className="desktop">MyDevInterview</span><span className="mobile">it</span> Works</h1>
         <div className="steps">
           <div className="step">
             <div className="icon">{plan}</div>
@@ -52,7 +54,7 @@ export default function LandingPage() {
           </div>
           <div className="arrow">
             <Image src={arrow} width={40} height={40} alt="right arrow"/>
-            <h3>&nbsp;</h3>
+            <h3>&nbsp;<span className="mobile"><br/>&nbsp;</span></h3>
           </div>
           <div className="step">
             <div className="icon">{record}</div>
@@ -60,7 +62,7 @@ export default function LandingPage() {
           </div>
           <div className="arrow">
             <Image src={arrow} width={40} height={40} alt="right arrow"/>
-            <h3>&nbsp;</h3>
+            <h3>&nbsp;<span className="mobile"><br/>&nbsp;</span></h3>
           </div>
           <div className="step">
             <div className="icon">{share}</div>
@@ -68,22 +70,22 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="steps-cta">
-          <Button onClick={() => setShowSignIn(true)} size="large" sx={{ width: "30vw", minWidth: "200px", mr: 2 }} variant="contained" color="primary" >Get Started</Button>
+          <Button onClick={() => setShowSignIn(true)} size="large" sx={{ width: "30vw", minWidth: "300px", borderRadius: "50px", mr: 2 }} variant="contained" color="primary" >Get Started</Button>
         </div>
       </div>
       <div className="features">
         <div>
           <Image src={video} alt="video call" width={540} height={360} />
         </div> 
-        <div>
+        <div className="features-text">
           <h2>Features</h2>
-          <div style={{ width: "max-content" }}>
-            <ul style={{ paddingLeft: 16 }}>
-              <li style={{ paddingBottom: 8 }}>Search &amp; filter hundreds of questions</li>
-              <li style={{ paddingBottom: 8 }}>Plan STAR, CARL, or SOAR responses</li>
-              <li style={{ paddingBottom: 8 }}>Practice, rate and save video responses</li>
-              <li style={{ paddingBottom: 8 }}>Share responses with friends and mentors</li>
-              <li style={{ paddingBottom: 8 }}>Use social feedback to improve your performance</li>
+          <div className="features-list">
+            <ul>
+              <li>Search &amp; filter hundreds of questions</li>
+              <li>Plan STAR, CARL &amp; SOAR responses</li>
+              <li>Practice, rate and save video responses</li>
+              <li>Share responses with friends and mentors</li>
+              <li><span className="desktop">Use social feedback to</span><span className="mobile">Get feedback &amp;</span> improve your performance</li>
             </ul>
           </div>
           
@@ -115,6 +117,11 @@ export default function LandingPage() {
         margin: -20px -3rem 20px -3rem;
         position: relative;
         overflow: hidden;
+        height: 30vh;
+      }
+      .hero-img {
+        height: 30vh;
+        width: 100vw;
       }
       .landing {
         position: absolute;
@@ -124,6 +131,9 @@ export default function LandingPage() {
         top: -20vw;
         left: -15vw;
         background-color: ${theme.palette.primary.main}
+      }
+      .mobile {
+        display: none
       }
       .cta {
         position: absolute;
@@ -172,7 +182,121 @@ export default function LandingPage() {
       }
       .features div {
         flex-grow: 1;
+        flex-shrink: 1;
+        max-width: 100vw;
         text-align: left;
+      }
+      .features-list {
+        width: max-content;
+      }
+      .features-list ul {
+        padding-left: 16px;
+      }
+      .features-list li {
+        padding-bottom: 8px;
+      }
+
+      @media only screen and (max-width: 500px) {
+        .hero {
+          margin: -20px -3rem 20px -3rem;
+          position: relative;
+          overflow: hidden;
+          height: 80vw;
+        }
+        .hero-img {
+          position: relative;
+          height: 80vw;
+          width: 150vw;
+          left: -25vw;
+        }
+        .landing {
+          border-radius: 0;
+          left: 25vw;
+          top: 0;
+          width: 100vw;
+          opacity: 0.85;
+          height: 80vw;
+        }
+        .cta {
+          width: 100vw;
+          padding: 10px;
+          height: 80vw;
+          left: 25vw;
+          text-align: center;
+        }
+        .cta-details {
+          display: inline-block;
+          padding: 0px 20px;
+        }
+        .cta button {
+          display: none;
+        }
+        .mobile {
+          display: unset;
+        }
+        .desktop {
+          display: none;
+        }
+        .steps {
+          min-height: 200px;
+          height: max-content;
+          margin-bottom: 0;
+        }
+        .step {
+          width: 20vw;
+          height: fit-content;
+        }
+        .arrow {
+          width: 12vw;
+          height: 100%;
+        }
+        .steps h3 {
+          font-weight: 500;
+          font-size: 1.15rem;
+          text-align: center;
+        }
+
+        .icon {
+          box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+          padding: 20px 20px 18px 20px;
+          border-radius: 80px;
+          background-color: #fff;
+          width: 20vw;
+          height: 20vw;
+          color: ${theme.palette.primary.main};
+        }
+        .features {
+          flex-wrap: wrap;
+          padding: 20px;
+          width: 100vw;
+          text-align: center;
+        }
+        .features-text {
+          width: calc(100vw - 40px);
+        }
+        .features-text h2 {
+          text-align: center;
+        }
+        .features div {
+          flex-grow: 0;
+          flex-shrink: 1;
+        }
+        .features-list {
+          width: 100%;
+          text-align: center;
+        }
+        .features-list ul {
+          padding-left: 0;
+        }
+        .features-list li {
+          display: inline-block;
+          width: 100%;
+          max-width: 100%;
+          text-align: center;
+          padding-bottom: 16px;
+          font-weight: 300;
+          font-size: 0.9remrem;
+        }
       }
       `}</style>
     </>

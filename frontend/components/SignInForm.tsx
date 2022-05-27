@@ -127,8 +127,8 @@ function SignInForm({ showSignIn, setShowSignIn, signUpMode }: SignInFormProps) 
 
   return (
     <>
-      <Dialog open={showSignIn}>
-        <Box sx={{ p: 2 }}>
+      <Dialog open={showSignIn} sx={{ maxWidth: "calc(100vw - 64px" }}>
+        <Box sx={{ p: 2, maxWidth: "calc(100vw - 64px)" }} >
           <div className="close-icon" onClick={() => { setShowSignIn(false); }}>
             <Image src={Close} alt="close sign in dialog" />
           </div>
@@ -208,6 +208,9 @@ function SignInForm({ showSignIn, setShowSignIn, signUpMode }: SignInFormProps) 
         </Box>
       </Dialog>
       <style jsx>{`
+      .dialog-window: {
+        max-width: calc(100vw - 64px)!important;
+      }
       form {
         margin-top: 24px;
       }

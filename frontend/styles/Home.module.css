@@ -10,6 +10,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .title a {
@@ -92,7 +93,19 @@
   margin-left: 0.5rem;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 500px) {
+  .container {
+    padding: 0;
+  }
+  .main {
+  min-height: calc(100vh - 109px);
+  max-height: calc(100vh - 165px);
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
   .grid {
     width: 100%;
     flex-direction: column;

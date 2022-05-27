@@ -1,5 +1,5 @@
-import React from 'react'
-import { useState, useContext, useEffect } from 'react'
+import React, { MutableRefObject } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router';
 import dynamic from "next/dynamic";
 import ReactMarkdown from "react-markdown";
@@ -21,12 +21,18 @@ const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false
 });
 
+const plus = (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+  <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+</svg>)
+
 export default function Plans({ id }: { id: number}) {
 
   const { user } = useContext(UserContext);
   const router = useRouter();
   const theme = useTheme();
 
+  const newAnswerRef = useRef(null);
+  const existingAnswerRef = useRef(null);
   interface Plan {
     id: string;
     attributes?: any
@@ -43,6 +49,8 @@ export default function Plans({ id }: { id: number}) {
   const [searchFor, setSearchFor] = useState("");
   const [searched, setSearched] = useState(false);
   const [searchResults, setSearchResults] = useState(catalog);
+  const [collapseNew, setCollapseNew] = useState(false);
+  const [collapseExisting, setCollapseExisting] = useState(false);
 
   const handleSetCatalog = (newCatalog: Array<any>) => {
     setCatalog(newCatalog);
@@ -295,7 +303,23 @@ export default function Plans({ id }: { id: number}) {
 
   const titleEditStyle = { flexGrow: 1, width: "100%", backgroundColor: theme.palette.background.paper,}
 
-  const mdEditorStyle = { height: "auto", width: "100%" };
+  const mdEditorStyle = { minHeight: 300, height: "auto", width: "100%" };
+
+  const calcMaxHeight = () => {
+      if (collapseNew && collapseExisting) {
+        return "calc(100vh - 146px - 114px)"
+      }
+      if (collapseNew && !collapseExisting) {
+        return "calc(100vh - 446px)"
+      }
+      if (!collapseNew && collapseExisting) {
+        return "calc(50vh - 14px)"
+      }
+      if (!collapseNew && !collapseExisting) {
+        return "calc(50vh - 14px)"
+      }
+    return "calc(110vh - 114px)"
+  }
 
   return (
     <div className={styles.container}>
@@ -307,7 +331,8 @@ export default function Plans({ id }: { id: number}) {
 
       <main className={styles.main}>
         <section className="videos">
-          <h1>Plan a New Answer</h1>
+          <h1>Plan a New Answer <span onClick={() => setCollapseNew(!collapseNew)} className={`mobile ${collapseNew ? "collapsed-icon" : "expanded-icon"}`}>{plus}</span></h1>
+          <div className={`collabsible ${collapseNew ? "collapsed" : "expanded"}`}>
           <form onSubmit={handleSearch}>
             <TextField 
               id="search" 
@@ -326,7 +351,9 @@ export default function Plans({ id }: { id: number}) {
             </div>
           </form>
             {searchResults?.length > 0 ? renderResults() : searched === false ? "" : "No questions match that search." }
-          <h1>My Planned Answers</h1>
+          </div>
+          <h1>My Planned Answers <span onClick={() => setCollapseExisting(!collapseExisting) }  className={`mobile ${collapseExisting ? "collapsed-icon" : "expanded-icon"}`}>{plus}</span></h1>
+          <div className={`collabsible ${collapseExisting ? "collapsed" : "expanded"}`}>
           {catalog?.length > 0 ? (
             <QuestionList
               catalog={catalog}
@@ -341,10 +368,11 @@ export default function Plans({ id }: { id: number}) {
                 setPlanMode: handleSetPlanMode
               }}
             />
-          ) : "No plans available to display"}
+            ) : "No plans available to display"}
+          </div>
         </section>
         <section className="viewer">
-          <h1>&nbsp;</h1>
+          <h1 className="desktop">&nbsp;</h1>
           {(+currentPlan.id > 0 || planMode == "create") && (<>
             <Card variant="outlined" sx={{ mb: theme.spacing(2), p: theme.spacing(2), display: 'flex', width: '100%', height: '10vh', minHeight: '80px', alignItems: 'center', justifyContent: 'center' }}>
               <div><b>{currentPlan.attributes.question.data.attributes.question}</b></div>
@@ -396,7 +424,9 @@ export default function Plans({ id }: { id: number}) {
                   )}
                 {editPlan && (
                   <form onSubmit={(e: any) => handleUpdate(e, { planned_answer: e.target.planned_answer.value })} className="md-editor">
-                    <MdEditor
+                      <MdEditor
+                        view={{ menu: true, md: true, html: false }}
+                        canView={{ both: false, menu: true, md: true, html: true, fullScreen: false, hideMenu: true }}
                       name="planned_answer"
                       defaultValue={currentPlan.attributes.planned_answer || ""}
                       style={mdEditorStyle}
@@ -436,6 +466,23 @@ export default function Plans({ id }: { id: number}) {
           </>)}
         </section>
       </main>
+      <style>{`
+      @media only screen and (max-width: 601px) {
+        .button-type-strikethrough,
+        .button-type-wrap, 
+        .button-type-underline,
+        .button-type-quote, 
+        .button-type-clear,
+        .button-type-table,
+        .button-type-undo,
+        .button-type-code-block,
+        .button-type-redo
+         {
+          display: none!important;
+        }
+      }
+      `}
+      </style>
       <style jsx>{`
         main {
           display: flex;
@@ -448,6 +495,13 @@ export default function Plans({ id }: { id: number}) {
           margin-right: 2rem;
           max-height: calc(100vh - 67px);
           overflow-y: scroll;
+        }
+        .collapsible {
+          transition: max-height 1s ease, height 1s ease, transform 1s ease;
+        }
+        .collapsed {
+          max-height: 0px;
+          overflow: hidden;
         }
         .viewer {
           width: calc(60vw - 2rem - 16px);
@@ -484,6 +538,69 @@ export default function Plans({ id }: { id: number}) {
           flex-wrap: wrap; 
           justify-content: flex-end; 
           width: 100%; 
+        }
+        .mobile {
+          display: none;
+        }
+        .expanded-icon {
+          transform: rotate(45deg);
+        }
+        .collapsed-icon {
+          transform: rotate(0deg);
+        }
+        @media only screen and (max-width: 500px) {
+          main {
+            flex-wrap: wrap-reverse;
+            overflow: hidden;
+            padding: 0;
+            flex-direction: row!important;
+            align-items: flex-end!important;
+            align-content: flex-end!important;
+            justify-content: flex-end!important;
+          }
+          .videos {
+            width: 100%;
+            margin-right: 0;
+            padding: 8px 16px 8px 16px;
+            min-height: ${currentPlan.id == "0" ? "calc(100vh - 148px)" : ""};
+            max-height: ${currentPlan.id == "0" ? "100%" : "calc(50vh - 92px)"};
+            overflow: scroll;
+            vertical-align: bottom;
+            box-shadow: 0px -3px 3px rgb(0,0,0,0.3);
+            background-color: ${theme.palette.background.paper};
+          }
+          .videos h1 {
+            display: inline-block;
+            width: calc(100% + 32px);
+            margin: 0px -16px;
+            padding: 16px;
+            position: relative;
+            margin-bottom: 8px;
+            background-color: ${theme.palette.primary.main};
+            color: #fff;
+          }
+          .viewer {
+            min-height: 0;
+            max-height: ${calcMaxHeight()};
+            overflow: scroll;
+            width: 100%;
+            padding: 1rem;
+          }
+          .viewer h1.desktop {
+            display: none!important;
+          }
+          .mb-1 {
+            margin-bottom: 0;
+          }
+          .mb-4 {
+            margin-bottom: 8px;
+          }
+          .mobile {
+            display: inline-block;
+            position: absolute;
+            top: calc(50% - 12px);
+            right: 10px;
+          }
         }
       `}</style>
     </div>

@@ -7,6 +7,7 @@ import { Box } from "@mui/material";
 import { UserContext } from "../scripts/context";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
+import BottomNav from "./BottomNav";
 
 const Layout = (props: any) => {
   const theme = useTheme();
@@ -51,7 +52,8 @@ const Layout = (props: any) => {
           <NavBar currentActivePage={activePage} />
         </header>
         <div className="padded-top">{props.children}</div>
-        <Footer />
+          <Footer />
+          <BottomNav  currentActivePage={activePage} />
         </Box>
       </UserContext.Provider>
       <style jsx>

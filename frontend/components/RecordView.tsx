@@ -48,6 +48,19 @@ const VideoPreview = ({ stream }: { stream: MediaStream | null }) => {
               opacity: ${loading ? 0 : 1}
               transition: opacity 1.5s ease;
             }
+            @media only screen and (max-width: 500px) {
+              .video-container {
+                width: 100%;
+                height: calc(min(66vh, 66vw));
+                background-color: black!important;
+                max-width: 100%;
+                max-height: 100%;
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              }
+            }
           `}</style>
           </>);
 };
@@ -400,6 +413,27 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
           font-size: 0.8em;
           line-height: 14px;
           position: absolute;
+        }
+        @media only screen and (max-width: 500px) {
+
+          .video-screen {
+            width: calc(min(88vh, 88vw));
+            height: calc(min(66vh, 66vw));
+            min-width: calc(min(88vh, 88vw));
+            min-height: calc(min(66vh, 66vw));
+            max-width: 1600px;
+            max-height: 1200px;
+            position: relative;
+          }
+
+          video {
+            width: calc(min(88vh, 88vw));
+            height: calc(min(66vh, 66vw));
+            min-width: calc(min(88vh, 88vw));
+            min-height: calc(min(66vh, 66vw));
+            border-radius: 6px;
+          }
+          
         }
       `}</style>
     </>

@@ -159,8 +159,8 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <section className="options">
-          <span><b>Filter by:</b></span>
-          <Chip color={filters.includes("Behavioral") ? "primary" : "default"} onClick={() => toggleFilter("Behavioral")} clickable sx={{ m: 0.5, px: 2 }} label="Behavioral" />
+          <span className="options-title"><b>Filter&nbsp;by<span className="mobile"> type of question</span>:</b></span>
+          <Chip color={filters.includes("Behavioral") ? "primary" : "default"} onClick={() => toggleFilter("Behavioral")} clickable sx={{ m: 0.5, px: 1 }} label="Behavioral" />
           <Chip color={filters.includes("Communication") ? "primary" : "default"} onClick={() => toggleFilter("Communication")} clickable sx={{ m: 0.5, px: 2 }} className="option-chip" label="Communication" />
           <Chip color={filters.includes("Opinion") ? "primary" : "default"} onClick={() => toggleFilter("Opinion")} clickable sx={{ m: 0.5, px: 2 }} className="option-chip" label="Opinion" />
           <Chip color={filters.includes("Technical") ? "primary" : "default"} onClick={() => toggleFilter("Technical")} clickable sx={{ m: 0.5, px: 2 }} className="option-chip" label="Technical" />
@@ -171,11 +171,11 @@ const Home: NextPage = () => {
           </Card>
           <RecordView handleNextQuestion={handleNext} key={question.id} questionId={question.id}/>
           <div className="buttons">
-            <div>
+            <div className="previous-question">
             {asked.length > 0 && <Button size="large" variant="text" onClick={handlePrevious}>&lt;&lt;&nbsp;Previous Question</Button>}
             
             </div>
-            <div>
+            <div className="skip-question">
             <Button size="large" variant="text" onClick={handleSkip}>Skip Question&nbsp;&gt;&gt;</Button>
             </div>
           </div>
@@ -209,6 +209,37 @@ const Home: NextPage = () => {
           width: calc(min(72vh, 72vw));
           min-width: calc(min(72vh, 72vw));
           max-width: 1600px;
+        }
+        .mobile {
+          display: none;
+        }
+        @media only screen and (max-width: 500px) {
+          .question {
+            width: calc(min(88vh, 88vw));
+            height: calc(min(66vh, 66vw) + 182px);
+            min-width: calc(min(88vh, 88vw));
+            min-height: calc(min(66vh, 66vw) + 182px);
+          }
+          .mobile {
+            display: unset;
+          }
+          .options {
+            flex-wrap: wrap;
+            width: calc(min(88vh, 88vw));
+            min-width: calc(min(88vh, 88vw));
+            max-width: 1600px;
+            justify-content: center;
+          }
+          .options-title {
+            display: inline-block;
+            padding: 0px 8px;
+            width: 100%;
+            text-align: center;
+          }
+          .skip-question,
+          .previous-question {
+            padding-top: 28px;
+          }
         }
       `}</style>
     </div>

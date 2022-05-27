@@ -39,13 +39,13 @@ export default function NewsAndInfo() {
         <div className="links">
           <a href="https://interviewsteps.com/blogs/news/amazon-star-method" target="_blank" rel="noreferrer">
           <div className="info-link">
-            <h3><span className="blue">STAR method answers</span></h3>
+            <h3><span className="blue">STAR method answers.</span></h3>
             <p>A detailed article on the Situation-Task-Action-Result method of answering behavioral interview questions.</p>
             </div>
           </a>
           <a href="https://hunterskillrecruitment.co.uk/answer-any-interview-question-with-c-a-r-l-your-best-reference/" target="_blank" rel="noreferrer">
             <div className="info-link">
-            <h3><span className="blue">Answer any interview question with CARL</span></h3>
+            <h3><span className="blue">Answer any interview question with CARL.</span></h3>
               <p>An article outlining how to answer interview questions using the Context-Action-Result-Learning structure.</p>
             </div>
           </a>
@@ -54,13 +54,13 @@ export default function NewsAndInfo() {
           <a href="https://www.indeed.com/career-advice/interviewing/interview-question-tell-me-about-yourself" target="_blank" rel="noreferrer">
             
           <div className="info-link">
-            <h3><span className="blue">How to answer &quot;tell me about yourself&quot;</span></h3>
+            <h3><span className="blue">How to answer &quot;tell me about yourself&quot;.</span></h3>
             <p>A step by step guide from Indeed on how to give your elevator pitch for yourself in an interview.</p>
           </div>
           </a>
           <a href="https://www.themuse.com/advice/video-interview-tips" target="_blank" rel="noreferrer">
           <div className="info-link">
-            <h3><span className="blue">Video Interview Tips</span></h3>
+            <h3><span className="blue">Video interview tips.</span></h3>
             <p>20 tips from The Muse on how to look and sound your very best in video interviews.</p>
             </div>
           </a>
@@ -68,13 +68,13 @@ export default function NewsAndInfo() {
         <div className="links">
           <a href="https://www.indeed.com/career-advice/interviewing/common-technical-interview-questions-and-answers" target="_blank" rel="noreferrer">
           <div className="info-link">
-            <h3><span className="blue">Common Technical Interview Questions &amp; Example Answers</span></h3>
+            <h3><span className="blue">Common technical interview questions &amp; example answers.</span></h3>
             <p>A comprehensive guide by Indeed that explains the types of questions you may get, and strategies for answering.</p>
             </div>
           </a>
           <a href="https://www.udemy.com/course/crack-the-coding-interview-like-an-expert-bigtech-faang/" target="_blank" rel="noreferrer">
           <div className="info-link">
-            <h3><span className="blue">Cracking the Coding Interview at FAANG &amp; Tech Companies</span></h3>
+            <h3><span className="blue">Cracking the coding interview at FAANG &amp; tech companies.</span></h3>
             <p>A comprehensive Udemy course on the interview process at Faang companies, with sample problems and solutions. (Costs $9.99.)</p>
             </div>
           </a>
@@ -150,6 +150,36 @@ export default function NewsAndInfo() {
         border-radius: 10px;
         padding: ${theme.spacing(2)};
         border: 1px solid ${theme.palette.background.default}
+      }
+      @media only screen and (max-width: 500px) {
+        .news-items,
+        .links {
+          flex-wrap: wrap;
+          margin: 0px -24px;
+        }
+        .info-link {
+          height: fit-content;
+          width: calc(100% - 16px);
+          padding: 16px;
+        }
+        .info-link h3 {
+          margin: 0;
+        }
+        .info-link p {
+          margin-bottom: 0;
+          margin-top: 4px;
+          color: #666;
+          font-size: 0.85rem;
+          line-height: 1.2rem;
+        }
+
+        .news-item {
+          margin: 16px 8px;
+        }
+
+        .news h4 {
+          text-align: center;
+        }
       }
       `}</style>
     </>

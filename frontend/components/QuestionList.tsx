@@ -6,6 +6,9 @@ import Plans from './Plans'
 import { UserContext } from '../scripts/context'
 import { API_URL } from '../pages'
 
+const plus = (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+  <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+</svg>)
 
 interface QuestionsProps {
   catalog: Array<any>;
@@ -131,7 +134,8 @@ function Questions({ catalog, setCatalog, style, activeRecords, setActiveRecords
           name="filter"
           label="Filter by question or video title"
           sx={{ background: theme.palette.background.paper, width: '100%', mb: 2 }}
-        />
+      />
+      <div className="cards-list">
       {catalog.filter((q: any) => {
         const question = q.question as string; 
         const records = q.records;
@@ -173,6 +177,7 @@ function Questions({ catalog, setCatalog, style, activeRecords, setActiveRecords
             )}
         </Card>
         ))}
+      </div>
       <Dialog open={showModal}>
         <Card sx={{ p: 4 }}>
           <div className="delete-confirm">Are you sure you want to {modalMode} this {style == "videos" ? "video" : "answer plan"}?</div>
@@ -193,6 +198,12 @@ function Questions({ catalog, setCatalog, style, activeRecords, setActiveRecords
         }
         .delete-confirm {
           margin-bottom: 24px;
+        }
+        @media only screen and (max-width: 500px) {
+          .cards-list {
+            max-height: calc(30vh + 8px);
+            overflow: scroll;
+          }
         }
       `}</style>
       </>

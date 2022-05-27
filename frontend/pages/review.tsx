@@ -146,6 +146,27 @@ export default function Videos({ id }: { id: number}) {
           max-width: 100%;
           border-radius: 6px;
         }
+        @media only screen and (max-width: 500px) {
+          main {
+            flex-wrap: wrap-reverse;
+            flex-direction: row!important;
+            overflow: scroll!important;
+            justify-content: flex-start!important;
+          }
+          .videos {
+            width: 100%;
+            margin-right: 0;
+            max-height: calc(50vh - 8px);
+            overflow: hidden;
+          }
+          .viewer {
+            width: calc(100vw - 2rem);
+          }
+
+          .viewer video {
+            height: calc(0.75 * (100vw - 2rem));
+          }
+        }
       `}</style>
     </div>
   )

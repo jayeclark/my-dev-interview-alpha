@@ -303,6 +303,26 @@ export default function Share() {
           right: 10px;
           top: 10px;
         }
+        @media only screen and (max-width: 500px) {
+          main {
+            flex-wrap: wrap-reverse;
+            flex-direction: row!important;
+          }
+          .videos {
+            width: 100%;
+            margin-right: 0;
+            max-height: calc(30vh);
+          }
+          .viewer {
+            width: calc(100vw - 2rem);
+          }
+          .viewer video {
+            margin: 0px 10vw;
+            max-width: calc(80vw - 2rem);
+            height: calc(0.75 * (80vw - 2rem));
+            border-radius: 6px;
+          }
+        }
       `}</style>
     </div>
   )
