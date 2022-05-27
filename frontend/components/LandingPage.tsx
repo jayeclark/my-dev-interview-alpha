@@ -82,7 +82,7 @@ export default function LandingPage() {
               size="large"
               variant="contained"
               color="info"
-              sx={{ mr: 2, borderRadius: "50px" }}
+              sx={{ mx: 1, mb: 1, borderRadius: "50px" }}
               onClick={() => setShowSignIn(true)}
             >
               Get Started
@@ -92,7 +92,7 @@ export default function LandingPage() {
               onClick={() => router.push("/practice")}
               variant="outlined"
               color="info"
-              sx={{ borderRadius: "50px" }}
+              sx={{ mx: 1, mb: 1, borderRadius: "50px" }}
             >
               Try it Out
             </Button>
@@ -144,9 +144,8 @@ export default function LandingPage() {
             size="large"
             sx={{
               width: "30vw",
-              minWidth: "300px",
+              minWidth: "280px",
               borderRadius: "50px",
-              mr: 2,
             }}
             variant="contained"
             color="primary"
@@ -217,7 +216,7 @@ export default function LandingPage() {
         width: 75vw;
         height: 75vw;
         border-radius: 50vw;
-        top: -20vw;
+        top: -25vw;
         left: -15vw;
         background-color: ${theme.palette.primary.main}
       }
@@ -228,7 +227,7 @@ export default function LandingPage() {
         position: absolute;
         top: 0;
         padding: 40px;
-        height: 50vw;
+        height: 45vw;
         width: 55vw;
         display: flex;
         flex-direction: column;
@@ -290,27 +289,40 @@ export default function LandingPage() {
           margin: -20px -3rem 20px -3rem;
           position: relative;
           overflow: hidden;
-          height: 80vw;
+          height: 54vw;
+          min-height: calc(max(264px, 54vw));
+          width: 100vw;
         }
         .hero-img {
           position: relative;
-          height: 80vw;
-          width: 150vw;
-          left: -25vw;
+          overflow-x: hidden;
+          height: 54vw;
+          width: 100vw;
+          left: unset;
+          right: 0px;
+          margin: 0;
+          min-height: 264px;
+          min-width: 484px;
+          filter: color()
         }
         .landing {
           border-radius: 0;
-          left: 25vw;
-          top: 0;
+          left: unset;
+          top: unset;
+          top: 0px;
           width: 100vw;
           opacity: 0.85;
-          height: 80vw;
+          height: 54vw;
+          min-height: 264px;
+          overflow-x: hidden;
         }
         .cta {
           width: 100vw;
-          padding: 10px;
-          height: 80vw;
-          left: 25vw;
+          padding: 25px;
+          left: unset;
+          right: 0;
+          height: 60vw;
+          min-height: 264px;
           text-align: center;
         }
         .cta-details {
@@ -362,6 +374,7 @@ export default function LandingPage() {
         }
         .features-text {
           width: calc(100vw - 40px);
+          max-width: calc(100vw - 40px);
         }
         .features-text h2 {
           text-align: center;
@@ -384,10 +397,12 @@ export default function LandingPage() {
           text-align: center;
           padding-bottom: 16px;
           font-weight: 300;
-          font-size: 0.9remrem;
+          font-size: 0.9rem;
         }
-        @media only screen and (min-width: 1200px) {
-
+      }
+      @media only screen and (max-width: 350px) {
+        h1 {
+          font-size: 1.6rem;
         }
       }
       `}</style>
