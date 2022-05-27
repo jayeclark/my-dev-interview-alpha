@@ -32,7 +32,7 @@ export default function LandingPage() {
     <>
       <div className="hero">
         <div className="hero-img">
-          <Image width="600" height="400" layout="responsive" src={hero} alt="video interview" />
+          <Image width="1100" height="600" layout="responsive" src={hero} alt="video interview" />
         </div>
         <div className="landing">
           
@@ -117,10 +117,10 @@ export default function LandingPage() {
         margin: -20px -3rem 20px -3rem;
         position: relative;
         overflow: hidden;
-        height: 30vh;
+        height: 60vw;
       }
       .hero-img {
-        height: 30vh;
+        height: 60vw;
         width: 100vw;
       }
       .landing {
