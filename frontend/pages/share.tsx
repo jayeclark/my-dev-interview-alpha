@@ -303,7 +303,7 @@ export default function Share() {
           right: 10px;
           top: 10px;
         }
-        @media only screen and (max-width: 500px) {
+        @media only screen and (max-width: 700px) {
           main {
             flex-wrap: wrap-reverse;
             flex-direction: row!important;
@@ -318,8 +318,8 @@ export default function Share() {
           }
           .viewer video {
             margin: 0px 10vw;
-            max-width: calc(80vw - 2rem);
-            height: calc(0.75 * (80vw - 2rem));
+            max-width: calc(min(80vw - 2rem, 80vh - 2rem));
+            height: calc(0.75 * min(80vw - 2rem, 80vh - 2rem));
             border-radius: 6px;
           }
         }
