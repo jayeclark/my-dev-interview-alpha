@@ -48,7 +48,7 @@ const VideoPreview = ({ stream }: { stream: MediaStream | null }) => {
               opacity: ${loading ? 0 : 1}
               transition: opacity 1.5s ease;
             }
-            @media only screen and (max-width: 500px) {
+            @media only screen and (max-width: 700px) {
               .video-container {
                 width: 100%;
                 height: calc(min(66vh, 66vw));
@@ -414,7 +414,7 @@ const RecordView = ({ questionId, handleNextQuestion, title="", answerId=-1 }: {
           line-height: 14px;
           position: absolute;
         }
-        @media only screen and (max-width: 500px) {
+        @media only screen and (max-width: 700px) {
 
           .video-screen {
             width: calc(min(88vh, 88vw));

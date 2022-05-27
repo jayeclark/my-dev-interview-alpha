@@ -196,7 +196,7 @@ export default function LandingPage() {
         padding-bottom: 8px;
       }
 
-      @media only screen and (max-width: 500px) {
+      @media only screen and (max-width: 700px) {
         .hero {
           margin: -20px -3rem 20px -3rem;
           position: relative;

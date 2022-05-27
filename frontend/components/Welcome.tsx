@@ -109,7 +109,7 @@ export default function LandingPage({ username, id }: { username: string;  id: s
       .mobile {
         display: false;
       }
-      @media only screen and (max-width: 500px) {
+      @media only screen and (max-width: 700px) {
         .stats {
           margin-bottom: 0;
         }

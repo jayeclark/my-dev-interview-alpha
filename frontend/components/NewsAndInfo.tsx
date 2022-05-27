@@ -151,7 +151,7 @@ export default function NewsAndInfo() {
         padding: ${theme.spacing(2)};
         border: 1px solid ${theme.palette.background.default}
       }
-      @media only screen and (max-width: 500px) {
+      @media only screen and (max-width: 700px) {
         .news-items,
         .links {
           flex-wrap: wrap;

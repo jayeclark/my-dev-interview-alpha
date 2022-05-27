@@ -157,7 +157,7 @@ function BottomNav({ currentActivePage }: {currentActivePage: string}) {
            flex-wrap: nowrap; 
            align-items: center;
         }
-        @media only screen and (max-width: 500px) {
+        @media only screen and (max-width: 700px) {
 
           .navigation {
             display: flex;

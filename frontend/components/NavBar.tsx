@@ -223,7 +223,7 @@ function NavBar({ currentActivePage }: {currentActivePage: string}) {
            flex-wrap: nowrap; 
            align-items: center;
         }
-        @media only screen and (max-width: 500px) {
+        @media only screen and (max-width: 700px) {
           .nav-item,
           .nav-item-active {
             display: none;

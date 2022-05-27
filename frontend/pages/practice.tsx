@@ -213,7 +213,7 @@ const Home: NextPage = () => {
         .mobile {
           display: none;
         }
-        @media only screen and (max-width: 500px) {
+        @media only screen and (max-width: 700px) {
           .question {
             width: calc(min(88vh, 88vw));
             height: calc(min(66vh, 66vw) + 182px);

@@ -199,7 +199,7 @@ function Questions({ catalog, setCatalog, style, activeRecords, setActiveRecords
         .delete-confirm {
           margin-bottom: 24px;
         }
-        @media only screen and (max-width: 500px) {
+        @media only screen and (max-width: 700px) {
           .cards-list {
             max-height: calc(30vh + 8px);
             overflow: scroll;

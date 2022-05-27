@@ -146,7 +146,7 @@ export default function Videos({ id }: { id: number}) {
           max-width: 100%;
           border-radius: 6px;
         }
-        @media only screen and (max-width: 500px) {
+        @media only screen and (max-width: 700px) {
           main {
             flex-wrap: wrap-reverse;
             flex-direction: row!important;

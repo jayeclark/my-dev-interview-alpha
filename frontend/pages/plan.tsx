@@ -548,7 +548,7 @@ export default function Plans({ id }: { id: number}) {
         .collapsed-icon {
           transform: rotate(0deg);
         }
-        @media only screen and (max-width: 500px) {
+        @media only screen and (max-width: 700px) {
           main {
             flex-wrap: wrap-reverse;
             overflow: hidden;
