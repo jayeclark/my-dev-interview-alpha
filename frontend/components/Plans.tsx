@@ -30,9 +30,9 @@ function Plans({ allRecords, activeRecords, filterBy, setActiveRecords, handlers
   
   return (
     <>
-      {allRecords.filter((p: any) => !p.attributes.title || p.attributes.title?.includes(filterBy) || p.attributes.question.data.attributes.question.includes(filterBy)).map((p: any) => (
+      {allRecords?.filter((p: any) => !p.attributes.title || p.attributes.title?.includes(filterBy) || p.attributes.question.data.attributes.question.includes(filterBy)).map((p: any) => (
         <div 
-          key={p.id} 
+          key={p.id.toString()} 
           className={activeRecords[0].id === p.id ? "video-active" : "video"}
           onClick={() => {
             setEditTitle(false);

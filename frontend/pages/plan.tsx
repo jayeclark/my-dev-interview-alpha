@@ -31,8 +31,6 @@ export default function Plans({ id }: { id: number}) {
   const router = useRouter();
   const theme = useTheme();
 
-  const newAnswerRef = useRef(null);
-  const existingAnswerRef = useRef(null);
   interface Plan {
     id: string;
     attributes?: any
@@ -188,7 +186,7 @@ export default function Plans({ id }: { id: number}) {
             }
           }
         };
-        newQ.records = newQ.records.filter((x: any) => x.id !== '0')
+        newQ.records = newQ.records.length ? newQ.records.filter((x: any) => x.id !== '0') : []
         newQ.records.push(plan);
         const newCatalog = [ ...catalog ];
         newCatalog[qIndex] = newQ;
