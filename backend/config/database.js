@@ -1,4 +1,5 @@
 const vars = process.env;
+console.log(vars);
 let DB_HOST;
 let DB_PORT;
 let DB_NAME;
@@ -15,7 +16,6 @@ if (vars.DATABASE_URL) {
   DB_USERNAME = username;
   DB_PASSWORD = password;
 }
-
 module.exports = ({ env }) => ({
   connection: {
     client: 'postgres',
@@ -25,7 +25,7 @@ module.exports = ({ env }) => ({
       database: env('DATABASE_NAME', DB_NAME || vars.DATABASE_NAME),
       user: env('DATABASE_USERNAME', DB_USERNAME || vars.DATABASE_USERNAME),
       password: env('DATABASE_PASSWORD', DB_PASSWORD || vars.DATABASE_PASSWORD),
-      ssl: !DB_HOST ? env.bool('DATABASE_SSL', false) : { rejectUnauthorized: env.bool('DATABASE_SSL', false) },
+      ssl: { rejectUnauthorized: env.bool('DATABASE_SSL', false) },
     },
   },
 });

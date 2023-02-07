@@ -8,7 +8,7 @@ if (vars.PUBLIC_URL) {
 module.exports = ({ env }) => ({
   host: env('HOST', '0.0.0.0'),
   port: env.int('PORT', PORT),
-  url: env('PUBLIC_URL', 'https://backend-sheltered-shelf-66946.herokuapp.com/'),
+  url: env('PUBLIC_URL', URL),
   app: {
     keys: env.array('APP_KEYS'),
   },
